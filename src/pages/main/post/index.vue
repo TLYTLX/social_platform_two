@@ -1,6 +1,5 @@
 <template>
 	<div>
-		<Header title="帖子详情"></Header>
         <div id="main">
         	<div class="page">
         		<el-button>返回本版</el-button>
@@ -11,27 +10,29 @@
                 </el-pagination>
         	</div>
         	<div class="post-title">
-        		【新鲜事】就开始考虑士大夫看见就发士大夫艰苦奋斗
+        		【{{post.type}}】{{post.title}}
         	</div>
-        	<div class="singlepost" v-for="i in 5">
+        	<div class="singlepost" v-for="(i,index) in post.reply">
             	<div class="post-left">
-            		<div class="poster">贴主</div>
+            		<div class="poster" v-if="i.user.name==post.reply[0].user.name">贴主</div>
             		<router-link to="/profile"><div class="avatar"></div></router-link>
             		<router-link to="/profile" style="text-decoration: none;">
-            			<div class="username">甲方的都是</div>
+            			<div class="username">{{i.user.name}}</div>
             		</router-link>
-            		<div class="info">电信学院  15级</div>
-            		<div>
+            		<div class="info">{{i.user.college}}  {{i.user.year}}级</div>
+            		<div v-if="i.user.state=='在线'">
             			<i class="el-icon-bell"></i>
             			<div class="connect">联系TA</div>
             		</div>
             	</div>
             	<div class="post-right">
-            		<div style="color:#bfbfbf">{{i}}楼</div>
-            		<div class="post-content">fdsdffds范德萨发大水范德萨加快了第三方接口发送的科技大厦士大夫但是看见的是房间里的身份的数据库发士大夫金龙卡撒旦反抗进来说说大家看见发生的事件的时间考虑的是副科级领导说说</div>
-            		<div class="post-reply">
-            			<a href>对方是否</a>：建设的封建士大夫艰苦附近开房快捷方式的
-            			<div>2018-01-09
+            		<div style="color:#bfbfbf">{{index}}楼</div>
+            		<div class="post-content">{{i.content}}</div>
+            		<div class="post-reply" v-if="i.reply.length" v-for="j in i.reply">
+            			<a href>{{j.user}}</a>
+            			<span v-if="j.replyuser">回复<a href>{{j.replyuser}}</a></span>
+            			：{{j.content}}
+            			<div>{{j.content}}
             				<span v-if="reply2!=i" @click="reply2=i">回复</span>
             				<div style="text-align: right" v-else>
                     			<el-input
@@ -44,18 +45,12 @@
                     		</div>
             			</div>
             		</div>
-            		<div class="post-reply">
-            			<a href>djdsfk</a>
-            			回复
-            			<a href>对方是否</a>：收到反馈收到付款记录是第三方接口发送的
-            			<div>2018-01-09<span>回复</span></div>
-            		</div>
             		<div class="post-option">
             			<div style="cursor:pointer" @click="reply=i">
             				<i class="el-icon-edit-outline"></i>
             				回帖
             			</div>
-            			<div>发表于 2018-03-28 08:33:22</div>
+            			<div>发表于 {{i.time}}</div>
             		</div>
             		<div style="text-align: right" v-show="reply==i">
             			<el-input
@@ -87,7 +82,6 @@
                 <el-button type="primary" class="submit">提交</el-button>
         	</div>
         </div>
-        <Footer></Footer>
     </div>
 </template>
 <script>
@@ -97,7 +91,30 @@ export default {
   data() {
     return {
     	reply: 0,
-    	reply2:0
+    	reply2:0,
+    	post:{
+    		title:'对方的士大夫犯得上方法犯得上反对法发发地方犯得上大师傅犯得上',
+    		type:'新鲜事',
+    		reply:[
+    		    {
+    		    	user:{
+            		    name:'十大科技士大夫艰苦',
+            		    college:'软件学院',
+            		    sex:'女',
+            		    year:2014
+        		    },
+        		    time:'2018-07-23 08:33:23',
+        		    content:'空间的身份科技发达省份的设计开发的是靠近发的时间开始的方法的刷卡记录的是付款记录的发的时刻记得是犯法的设计开发的时间考虑发的刷卡记录的算法框架',
+        		    reply:[
+        		    	{
+        		    	user:'sdffsfsdsdf',
+        		    	content:'dsfssdfsfds',
+        		    	replyuser:'dfdddf',
+        		    	},
+        		    ]
+    		    }
+    		]
+    	}
     }
   },
   components: {

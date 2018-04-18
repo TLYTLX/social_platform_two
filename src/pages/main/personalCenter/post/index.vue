@@ -1,6 +1,6 @@
 <template>
-	<el-table
-        :data="table">
+    <el-table
+        :data="post">
         <el-table-column
             prop="title"
             label="标题"
@@ -34,31 +34,9 @@
 </template>
 <script>
 export default {
+    props:['post'],
     data() {
         return {
-            table:[
-            {
-                title: '单价多少积分多少积分多少发多少交付时间',
-                type_model: '二手交易',
-                date: '2018-03-04 08:03:34',
-                state: '冻结'
-            },{
-                title: '单价多少积分多少积分多少发多少交付时间',
-                type_model: '二手交易',
-                date: '2018-03-04 08:03:34',
-                state: '冻结'
-            },{
-                title: '单价多少积分多少积分多少发多少交付时间',
-                type_model: '二手交易',
-                date: '2018-03-04 08:03:34',
-                state: '冻结'
-            },{
-                title: '单价多少积分多少积分多少发多少交付时间',
-                type_model: '二手交易',
-                date: '2018-03-04 08:03:34',
-                state: '冻结'
-            },
-            ]
         }
     },
     components: {

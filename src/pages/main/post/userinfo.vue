@@ -1,11 +1,10 @@
 <template>
 	<div>
-		<Header title="xxxx个人信息"></Header>
         <div id="main">
         	<div class="avatar"></div>
         	<div class="info">
-        		<div class="username">大家看法的数据库[在线]</div>
-        		<div>kjfdsj个人简介kldssjkjlsjkfskjldsfsfdkj</div>
+        		<div class="username">{{user.name}}[{{user.state}}]</div>
+        		<div>{{user.introduce}}</div>
         	</div>
        		<div class="connect">
        			<i class="el-icon-bell"></i>
@@ -14,32 +13,44 @@
         	<div class="main-info">
         		<div class="info-title">基本信息</div>
         		<div class="info-block">
-        			<div><span>昵称：</span>大事发生就</div>
-        			<div><span>性别：</span>女</div>
-        			<div><span>学院：</span>软件学院</div>
-        			<div><span>年级：</span>2014级</div>
+        			<div><span>昵称：</span>{{user.name}}</div>
+        			<div><span>性别：</span>{{user.sex}}</div>
+        			<div><span>学院：</span>{{user.college}}</div>
+        			<div><span>年级：</span>{{user.year}}</div>
         		</div>
         		<div class="info-title">活跃概况</div>
         		<div class="info-block">
-        			<div><span>发帖数：</span>447</div>
-        			<div><span>上次在线时间：</span>2018-03-24 08:23:32</div>
+        			<div><span>发帖数：</span>{{user.count}}</div>
+        			<div><span>上次在线时间：</span>{{user.lasttime}}</div>
         		</div>
         	</div>
         </div>
-        <Footer></Footer>
     </div>
 </template>
 <script>
-import Header from './header.vue';
-import Footer from './footer.vue';
+import Header from '../../../components/header.vue';
+import Footer from '../../../components/footer.vue';
 export default {
   data() {
     return {
+    	title:'',
+    	user:{
+    		name:'大家看法的数据库',
+    		state:'在线',
+    		introduce:'kjfdsj个人简介kldssjkjlsjkfskjldsfsfdkj',
+    		sex:'女',
+    		year:2015,
+    		college:'软件学院',
+    		count:456,
+    		lasttime:'2018-07-23 08:34:23'
+    	}
     }
   },
   components: {
   	Header,
   	Footer,
+  },
+  created(){
   }
 }
 </script>
