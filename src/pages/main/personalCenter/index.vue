@@ -1,7 +1,6 @@
 <template>
-	<div>
-		<Header title="个人中心"></Header>
-    	<div class="main">
+	<div id="personal-center">
+    	<div class="personal-main">
         	<div class="menu">
                 <div class="avatar"></div>
                 <div class="username">的决定是否大师风</div>
@@ -16,12 +15,9 @@
         		<my-message v-if="menu==3"></my-message>
         	</div>
         </div>
-        <Footer></Footer>
     </div>
 </template>
 <script>
-import Header from '../../../components/header.vue';
-import Footer from '../../../components/footer.vue';
 import Info from './information/index.vue';
 import MyPost from './post/index.vue';
 import MyMessage from './message/index.vue';
@@ -33,8 +29,6 @@ export default {
     }
   },
   components: {
-  	Header,
-  	Footer,
   	Info,
   	MyPost,
   	MyMessage
@@ -43,13 +37,16 @@ export default {
 </script>
 
 <style>
+    #personal-center {
+        width: 100%;
+    }
 	body{
 		background: #f7f9fb;
 		margin:0;
 	}
-	.main {
+	.personal-main {
 		display: flex;
-		width: 90%;
+		width: 100%;
 		margin: 10px auto;
 	}
 	.menu{

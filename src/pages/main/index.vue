@@ -23,9 +23,12 @@
                 <div class="navbar-login" v-else>
                     <el-dropdown>
                         <span class="el-dropdown-link">
-                          个人中心<i class="el-icon-arrow-down el-icon--right"></i>
+                          {{ username }}<i class="el-icon-arrow-down el-icon--right"></i>
                         </span>
                         <el-dropdown-menu slot="dropdown">
+                            <el-dropdown-item v-if="identity !== 'user'">
+                                <router-link to="/personal">个人中心</router-link>
+                            </el-dropdown-item>
                             <el-dropdown-item v-if="identity !== 'user'">
                                 <router-link to="/admin">后台管理</router-link>
                             </el-dropdown-item>
@@ -255,12 +258,10 @@
         .main
             display:flex;
             padding:20px;
-            .mainLeft
-                flex:2
-                padding-left:75px;
-                #levelTwo
-                    position: relative;
-                    min-height:88vh;
+            #levelTwo
+                position: relative;
+                min-height:88vh;
+                width: 100%;
         .pop-ups
                 .panel
                     width:300px;
