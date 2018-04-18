@@ -1,5 +1,6 @@
 <template>
     <el-table
+        :border="false"
         :data="table" class="rent-table">
         <el-table-column
             prop="title"
@@ -38,8 +39,14 @@ export default {
 
 <style>
     .rent-table{
-        width:1100px;
+        width:1102px;
         margin:10px auto;
         border-top: 3px solid #73BAB2;
+    }
+    .el-table th{
+        background: #fff;
+    }
+    .el-table th>.cell {
+        background: #fff;
     }
 </style>

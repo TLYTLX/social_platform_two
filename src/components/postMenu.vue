@@ -5,7 +5,7 @@
    			<div class="news-content" style="-webkit-box-orient: vertical;">{{post.content}}</div>
    			<div class="news-like">
    				<img src="../static/like.png" style="width: 40px;display:block;margin: 10px auto;">
-   			{{post.content}}</div>
+   			{{post.like}}</div>
    			<div class="news-like">
    				<div style="margin: 20px auto;">回复</div>
    			{{post.reply}}</div>
@@ -27,6 +27,7 @@ export default {
 
 <style>
 	.news-title {
+		display: block;
 		color: #73bab2;
 		text-overflow: ellipsis;
 		overflow: hidden;

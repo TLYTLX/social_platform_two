@@ -1,9 +1,7 @@
 <template>
-    <div>
-        <Header title="合租信息"></Header>
-        <Search type="rent"></Search>
+    <div style="width:100%">
+        <Search type="date"></Search>
         <rent-table :table="table"></rent-table>
-        <Footer></Footer>
     </div>
 </template>
 <script>

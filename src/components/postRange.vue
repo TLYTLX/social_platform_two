@@ -1,8 +1,8 @@
 <template>
 	<div class="mainright">
 		<div class="range-title">月度热赞榜</div>
-		<div class="range-one" v-for="i in list">
-			<div class="range-text">{{i}}.{{i.title}}</div>
+		<div class="range-one" v-for="(i,index) in list">
+			<div class="range-text">{{index+1}}.{{i.title}}</div>
 			<div style="white-space:nowrap">{{i.time}}</div>
 		</div>
 	</div>

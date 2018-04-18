@@ -219,8 +219,7 @@
     .index
         .header
             box-sizing:border-box;
-            height:90px;
-            padding:25px 100px;
+            padding:10px 100px;
             background-color:#fff;
             box-shadow:0 1px 2px rgba(151,151,151,0.58);
             .navbar

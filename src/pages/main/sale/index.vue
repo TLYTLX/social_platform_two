@@ -1,15 +1,13 @@
 <template>
-	<div>
-		<Header title="二手交易"></Header>
+	<div style="width:100%">
         <Search type="sale"></Search>
         <div id="main">
-        	<router-link to="/post" v-for="i in 5" class="sale-block">
+        	<router-link to="/post" v-for="i in data" class="sale-block">
         		<div class="sale-img"></div>
-        		<div class="sale-title">【衣服】第三方科技时代士大夫艰苦奋斗设计开发的是对方是否数</div>
-        		<div>2018-03-13</div>
+        		<div class="sale-title">【{{i.type}}】{{i.title}}</div>
+        		<div>{{i.time}}</div>
         	</router-link>
         </div>
-        <Footer></Footer>
     </div>
 </template>
 <script>
@@ -19,6 +17,25 @@ import Footer from '../../../components/footer.vue';
 export default {
   data() {
     return {
+    	data:[
+    	    {
+    	    	title:'大师傅犯得上大师傅发射点发射点方法对付的',
+    	    	time: '2018-07-03',
+    	    	type: '衣服'
+    	    },{
+    	    	title:'大师傅犯得上大师傅发射点发射点方法对付的',
+    	    	time: '2018-07-03',
+    	    	type: '衣服'
+    	    },{
+    	    	title:'大师傅犯得上大师傅发射点发射点方法对付的',
+    	    	time: '2018-07-03',
+    	    	type: '衣服'
+    	    },{
+    	    	title:'大师傅犯得上大师傅发射点发射点方法对付的',
+    	    	time: '2018-07-03',
+    	    	type: '衣服'
+    	    },
+    	]
     }
   },
   components: {

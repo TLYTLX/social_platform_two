@@ -1,6 +1,5 @@
 <template>
-	<div>
-		<Header title="表白墙"></Header>
+	<div style="width:100%">
         <Search type="profess"></Search>
         <div id="main">
         	<div class="mainleft">
@@ -10,7 +9,6 @@
         	</div>
         	<post-range :list="list"></post-range>
         </div>
-        <Footer></Footer>
     </div>
 </template>
 <script>
