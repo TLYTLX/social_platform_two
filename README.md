@@ -1,5 +1,4 @@
 
-
 ## 前言:
 > 完全使用ajax交互, 无服务端模版渲染
 后端部分基本完全参考妙味课堂腾讯课堂公开的nodejs搭建博客视频
@@ -85,7 +84,7 @@
 npm install
 
 # 进入mongodb的bin目录启动数据库 (需了解mongodb的初步启动)
-mongod --dbpath=E:\project\blog\server\db 
+mongod --dbpath=E:\project\blog\server\db
 
 # 进入server目录启动服务端
 node app.js
@@ -119,3 +118,4 @@ npm run dev
 除了上述暂未实现的功能外,很多代码没有优化,很脏,可能有不少重复代码,能够抽象出来却没有抽象,但是有一点好处就是阅读的话比较方便,不用到处跳(什么鬼理由- -!!),好啦,就这样!
 
 [给我一颗小星星好不咯:github](https://github.com/hackerwen/vue-blog)
+
