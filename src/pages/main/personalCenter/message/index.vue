@@ -1,14 +1,14 @@
 <template>
-	<div>
-        <div class="message" v-for="i in 5">
+    <div>
+        <div class="message" v-for="i in message">
             <div class="msg-avatar"></div>
             <div class="msg-content">
                 <div class="msg-title">
-                    <a href>酒店附近</a>
+                    <a href>{{i.username}}</a>
                     回复
-                    <a href>【新鲜事】dfdfdsdsfsdd对方收到收到</a>
+                    <a href>【{{i.type}}】{{i.title}}</a>
                 </div>
-                发的数据库的分量接口发的收款付款链接发甲方的时刻监督司法会计发射点士大夫艰苦空间发的是艰苦大师傅大师傅艰苦8
+                {{i/content}}
             </div>
         </div>
         <div class="pagination">
@@ -21,6 +21,7 @@
 </template>
 <script>
 export default {
+    props:['message'],
     data() {
         return {
         }
