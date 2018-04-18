@@ -52,7 +52,9 @@
 	                    <div class="text-desc">
 	                    	<h3>{{i.title}}</h3>
 	                        <p>{{i.introduce}}</p>
-	                    	<a href="#" class="btn">go on</a>
+                            <router-link :to="{path:i.path}" class="btn">
+                                go on
+                            </router-link>
 	                    </div>
 	                </div>
 	            </li>
@@ -109,16 +111,20 @@ export default {
         nav:[
             {
                 title:'匿名论坛',
-                introduce:'匿名吐槽发泄不满总之大家都不知道你是谁呀w'
+                introduce:'匿名吐槽发泄不满总之大家都不知道你是谁呀w',
+                path: '/profess'
             },{
                 title:'二手市场',
-                introduce:'在别人手里或许有你想要的东西'
+                introduce:'在别人手里或许有你想要的东西',
+                path: '/sale'
             },{
                 title:'合租信息',
-                introduce:'寻找可靠兴趣相投的室友'
+                introduce:'寻找可靠兴趣相投的室友',
+                path: '/rent'
             },{
                 title:'相约华工',
-                introduce:'一起狼人杀密逃各种桌游或者只是看个电影'
+                introduce:'一起狼人杀密逃各种桌游或者只是看个电影',
+                path: '/date'
             },
         ]
     }
