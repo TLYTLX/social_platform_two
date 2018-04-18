@@ -1,6 +1,6 @@
 <template>
 	<div style="width:100%">
-        <div id="banner"><img src="../static/logo.png"></div>
+        <div id="banner"><img src="../../../static/logo.png"></div>
     	<div class="block1" id="profess">
             <div class="block-title">你的表白上墙啦</div>
             <div class="block-sub">PROFESS</div>
@@ -35,7 +35,7 @@
         			    <div class="news-content" style="-webkit-box-orient: vertical;">{{i.content}}</div>
         		    </div>
                     <div style="display:inline-block;text-align:center">
-                        <img src="../static/like.png" style="width: 40px;display:block">
+                        <img src="../../../static/like.png" style="width: 40px;display:block">
                         {{i.like}}
                     </div>
         			<div class="news-time">{{i.time}}</div>
@@ -47,7 +47,7 @@
                 <li v-for="i in nav">
 	            	<div class="port-2 effect-2">
 	                	<div class="image-box">
-	                    	<img src="../static/img-2.jpg" alt="Image-2">
+	                    	<img src="../../../static/img-2.jpg" alt="Image-2">
 	                    </div>
 	                    <div class="text-desc">
 	                    	<h3>{{i.title}}</h3>
@@ -60,11 +60,8 @@
         </div>
     </div>
 </template>
-<!--远程登陆密码800941-->
-<!--账号root密码Lsy642977047<<-->
+
 <script>
-import Header from './header.vue';
-import Footer from './footer.vue';
 export default {
   data() {
     return {
@@ -125,11 +122,7 @@ export default {
             },
         ]
     }
-  },
-  components: {
-    Header,
-    Footer
-  },
+  }
 }
 </script>
 
@@ -265,11 +258,11 @@ export default {
 .ca-menu li:hover{
     background-color: #fff;
     z-index:999;
-    -webkit-transform: scale(1.1);  
-    -moz-transform: scale(1.1);  
-    -ms-transform: scale(1.1);   
-    -o-transform: scale(1.1);   
-    transform: scale(1.1);  
+    -webkit-transform: scale(1.1);
+    -moz-transform: scale(1.1);
+    -ms-transform: scale(1.1);
+    -o-transform: scale(1.1);
+    transform: scale(1.1);
 }
 .ca-menu li:hover .ca-icon{
     color: #606266;
@@ -397,7 +390,7 @@ body{
     height: 200px;
     border-bottom: 1px solid #333;
     text-align: center;
-    background: #f1f1f1 url('../static/wall.jpg') repeat center top;
+    background: #f1f1f1 url('../../../static/wall.jpg') repeat center top;
 }
 #banner img{
     width: 100px;

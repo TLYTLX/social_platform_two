@@ -5,7 +5,9 @@
         <div class="header">
             <div class="navbar">
                 <div class="navbar-header">
-                    <a class="navbar-brand" href="#">社区系统</a>
+                    <router-link to="/">
+                        社区系统
+                    </router-link>
                 </div>
                 <ul class="nav">
                     <li v-for="category in categories">

@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import Router from 'vue-router';
 import index from '../pages/main/index.vue';
-import index_list from '../pages/main/index_list.vue';
+import home from '../pages/main/home/index.vue';
 // import view from '../pages/main/view.vue';
 import admin_index from '../pages/admin/index.vue';
 import index_welcome from '../pages/admin/index_welcome.vue';
@@ -31,7 +31,7 @@ export default new Router({
             children: [
                 {
                     path: '/',
-                    component: index_list
+                    component: home
                 },
                 {
                     name: 'news',
