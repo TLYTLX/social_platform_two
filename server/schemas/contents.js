@@ -15,10 +15,10 @@ module.exports = new mongoose.Schema({
         default: true
     },
     // 简介
-    description: {
-        type: String,
-        default: '',
-    },
+    // description: {
+    //     type: String,
+    //     default: '',
+    // },
     // 内容
     content: {
         type: String,
@@ -43,4 +43,12 @@ module.exports = new mongoose.Schema({
         type: Array,
         default: []
     },
+    like: {
+        type: Number,
+        default: 0
+    },
+    // 通过关键字搜索
+    keyWord: {
+        type: String
+    }
 });

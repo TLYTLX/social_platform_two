@@ -32,34 +32,34 @@ router.get('/', function (req, res, next) {
 
 
 /*获取文章列表*/
-// var data = {};
-// router.get('/category', function (req, res, next) {
-//     data.category = req.query.id || '';
-//     data.count = 0;
-//     data.page = Number(req.query.page || 1);
-//     data.limit = 5;
-//     data.pages = 0;
-//     var where = {};
-//     if (data.category) {
-//         where.category = data.category;
-//     }
-//     Content.where(where).count().then(function (count) {
-//         data.count = count;
-//         data.pages = Math.ceil(data.count / data.limit);
-//         data.page = Math.min(data.page, data.pages);
-//         // 取值不能小于1
-//         data.page = Math.max(data.page, 1);
-//
-//         var skip = (data.page - 1) * data.limit;
-//
-//         return Content.find().where(where).sort({addTime: -1}).limit(data.limit).skip(skip).populate(['category', 'user']);
-//
-//     }).then(function (contents) {
-//         data.contents = contents;
-//         // console.log(data);
-//         res.json(data);
-//     })
-// })
+var data = {};
+router.get('/category', function (req, res, next) {
+    data.category = req.query.id || '';
+    data.count = 0;
+    data.page = Number(req.query.page || 1);
+    data.limit = 5;
+    data.pages = 0;
+    var where = {};
+    if (data.category) {
+        where.category = data.category;
+    }
+    Content.where(where).count().then(function (count) {
+        data.count = count;
+        data.pages = Math.ceil(data.count / data.limit);
+        data.page = Math.min(data.page, data.pages);
+        // 取值不能小于1
+        data.page = Math.max(data.page, 1);
+
+        var skip = (data.page - 1) * data.limit;
+
+        return Content.find().where(where).sort({addTime: -1}).limit(data.limit).skip(skip).populate(['user']);
+
+    }).then(function (contents) {
+        data.contents = contents;
+        // console.log(data);
+        res.json(data);
+    })
+})
 
 /*文章详情*/
 var contentDetail = {};

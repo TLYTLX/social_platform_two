@@ -2,7 +2,7 @@ import Vue from 'vue';
 import Router from 'vue-router';
 import index from '../pages/main/index.vue';
 import home from '../pages/main/home/index.vue';
-// import view from '../pages/main/view.vue';
+import view from '../pages/main/view.vue';
 import admin_index from '../pages/admin/index.vue';
 import index_welcome from '../pages/admin/index_welcome.vue';
 import user_index from '../pages/admin/user_index.vue';
@@ -77,15 +77,15 @@ export default new Router({
                     name: 'rent',
                     path: '/rent',
                     component: rent
-                }
+                },
                 // {
                 //     path: '/category',
                 //     component: index_list
                 // },
-                // {
-                //     path: '/view',
-                //     component: view
-                // },
+                {
+                    path: '/view',
+                    component: view
+                },
             ]
         },
         {
@@ -116,6 +116,7 @@ export default new Router({
                     path: '/admin/content/edit',
                     component: content_edit
                 },
+
             ]
         }
     ]
