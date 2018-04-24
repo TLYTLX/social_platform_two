@@ -1,14 +1,12 @@
 <template>
 	<div style="width:100%">
         <Search type="rent"></Search>
-        <rent-table :table="table"></rent-table>
+        <grid :table="table"></grid>
     </div>
 </template>
 <script>
 import Search from '../../../components/search.vue';
-import Header from '../../../components/header.vue';
-import Footer from '../../../components/footer.vue';
-import RentTable from '../../../components/rentTable.vue';
+import Grid from '../../../components/grid.vue';
 export default {
   data() {
     return {
@@ -43,10 +41,8 @@ export default {
     }
   },
   components: {
-  	Header,
-  	Footer,
   	Search,
-    RentTable
+    Grid
   }
 }
 </script>

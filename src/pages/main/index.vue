@@ -207,7 +207,7 @@
                     this.showLogined = false;
                     this.user = {};
                 }, response => {
-                    console.log(response);
+                    console.log('error:' + response);
                 })
             },
         }

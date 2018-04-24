@@ -1,240 +1,333 @@
 <template>
-	<div>
+    <div>
         <div id="main">
-        	<div class="page">
-        		<el-button>返回本版</el-button>
-        		<el-pagination
-                    background
-                    layout="prev, pager, next"
-                    :total="1000">
-                </el-pagination>
-        	</div>
-        	<div class="post-title">
-        		【{{post.type}}】{{post.title}}
-        	</div>
-        	<div class="singlepost" v-for="(i,index) in post.reply">
-            	<div class="post-left">
-            		<div class="poster" v-if="i.user.name==post.reply[0].user.name">贴主</div>
-            		<router-link to="/profile"><div class="avatar"></div></router-link>
-            		<router-link to="/profile" style="text-decoration: none;">
-            			<div class="username">{{i.user.name}}</div>
-            		</router-link>
-            		<div class="info">{{i.user.college}}  {{i.user.year}}级</div>
-            		<div v-if="i.user.state=='在线'">
-            			<i class="el-icon-bell"></i>
-            			<div class="connect">联系TA</div>
-            		</div>
-            	</div>
-            	<div class="post-right">
-            		<div style="color:#bfbfbf">{{index}}楼</div>
-            		<div class="post-content">{{i.content}}</div>
-            		<div class="post-reply" v-if="i.reply.length" v-for="j in i.reply">
-            			<a href>{{j.user}}</a>
-            			<span v-if="j.replyuser">回复<a href>{{j.replyuser}}</a></span>
-            			：{{j.content}}
-            			<div>{{j.content}}
-            				<span v-if="reply2!=i" @click="reply2=i">回复</span>
-            				<div style="text-align: right" v-else>
-                    			<el-input
+            <div class="page">
+                <el-button>
+                    <router-link to="/profess">
+                        返回本版
+                    </router-link>
+                </el-button>
+            </div>
+
+            <div class="post-title">
+                【{{post.category}}】{{post.title}}
+            </div>
+
+            <div class="singlepost">
+                <div class="post-left">
+                    <div class="poster">贴主</div>
+                    <router-link to="/profile"><div class="avatar"></div></router-link>
+                    <router-link to="/profile" style="text-decoration: none;">
+                        <div class="username">{{user.username}}</div>
+                    </router-link>
+                    <div class="info">{{user.college}}  {{user.year}}级</div>
+                </div>
+                <div class="post-right">
+                    <div class="post-content">{{post.content}}</div>
+                </div>
+            </div>
+
+            <div class="singlepost" v-for="(i,index) in post.comments">
+                <div class="post-left">
+                    <router-link to="/profile"><div class="avatar"></div></router-link>
+                    <router-link to="/profile" style="text-decoration: none;">
+                        <div class="username">{{i.user.name}}</div>
+                    </router-link>
+                    <div class="info">{{i.user.college}}  {{i.user.year}}级</div>
+                </div>
+                <div class="post-right">
+                    <div style="color:#bfbfbf">{{index+1}}楼</div>
+                    <div class="post-content">{{i.content}}</div>
+                    <div class="post-reply" v-if="i.reply.length" v-for="j in i.reply">
+                        <a href >{{j.username}}</a>
+                        <span v-if="j.replyUser">回复<a href>{{j.replyUser}}</a></span>
+                        ：{{j.content}}
+                        <div>{{j.content}}
+                            <span v-if="reply2!=i" @click="reply2=i">回复</span>
+                            <div style="text-align: right" v-else>
+                                <el-input
                                     type="textarea"
                                     :rows="3"
                                     placeholder="请输入内容"
-                                    v-model="textarea">
+                                    v-model="reply_content">
                                 </el-input>
-                                <el-button type="primary" class="submit">提交</el-button>
-                    		</div>
-            			</div>
-            		</div>
-            		<div class="post-option">
-            			<div style="cursor:pointer" @click="reply=i">
-            				<i class="el-icon-edit-outline"></i>
-            				回帖
-            			</div>
-            			<div>发表于 {{i.time}}</div>
-            		</div>
-            		<div style="text-align: right" v-show="reply==i">
-            			<el-input
+                                <el-button type="primary" class="submit" @click="onSubmitReply(reply_content, index, j.username)">提交</el-button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="post-option">
+                        <div style="cursor:pointer" @click="reply=i">
+                            <i class="el-icon-edit-outline"></i>
+                            回帖
+                        </div>
+                        <div>发表于 {{i.postTime}}</div>
+                    </div>
+                    <div style="text-align: right" v-show="reply==i">
+                        <el-input
                             type="textarea"
                             :rows="3"
                             placeholder="请输入内容"
-                            v-model="textarea">
+                            v-model="comment_content">
                         </el-input>
-                        <el-button type="primary" class="submit">提交</el-button>
-            		</div>
-            	</div>
+                        <el-button type="primary" class="submit" @click="onSubmitReply(comment_content, index, '')">提交</el-button>
+                    </div>
+                </div>
             </div>
             <div class="page">
-        		<el-button>返回本版</el-button>
-        		<el-pagination
+                <el-button>
+                    <router-link to="/profess">
+                        返回本版
+                    </router-link>
+                </el-button>
+                <el-pagination
                     background
                     layout="prev, pager, next"
-                    :total="1000">
+                    @current-change="handleCurrentChange"
+                    :page-size="10"
+                    :total="total">
                 </el-pagination>
-        	</div>
-        	<div class="main-reply">
-        		<div style="text-align:left;margin:10px 0;">快速回复楼主：</div>
-        		<el-input
+            </div>
+            <div class="main-reply">
+                <div style="text-align:left;margin:10px 0;">快速回复楼主：</div>
+                <el-input
                     type="textarea"
-                    :rows="8"
-                    placeholder="请输入内容"
-                    v-model="textarea">
+                    :autosize="{ minRows: 5}"
+                    placeholder="写下你的评论"
+                    v-model="editing_comment">
                 </el-input>
-                <el-button type="primary" class="submit">提交</el-button>
-        	</div>
+                <el-button type="primary" class="submit" @click="onSubmitComment">提交</el-button>
+            </div>
         </div>
     </div>
 </template>
 <script>
-import Header from '../../../components/header.vue';
-import Footer from '../../../components/footer.vue';
-export default {
-  data() {
-    return {
-    	reply: 0,
-    	reply2:0,
-    	post:{
-    		title:'对方的士大夫犯得上方法犯得上反对法发发地方犯得上大师傅犯得上',
-    		type:'新鲜事',
-    		reply:[
-    		    {
-    		    	user:{
-            		    name:'十大科技士大夫艰苦',
-            		    college:'软件学院',
-            		    sex:'女',
-            		    year:2014
-        		    },
-        		    time:'2018-07-23 08:33:23',
-        		    content:'空间的身份科技发达省份的设计开发的是靠近发的时间开始的方法的刷卡记录的是付款记录的发的时刻记得是犯法的设计开发的时间考虑发的刷卡记录的算法框架',
-        		    reply:[
-        		    	{
-        		    	user:'sdffsfsdsdf',
-        		    	content:'dsfssdfsfds',
-        		    	replyuser:'dfdddf',
-        		    	},
-        		    ]
-    		    }
-    		]
-    	}
+    export default {
+
+        data() {
+            return {
+                editing_comment: '',
+                reply_content: '',
+                comment_content:'',
+                reply: 0,
+                reply2:0,
+                page: 1,
+                total: 0,
+                user: {
+                    username: '',
+                    college: '未知',
+                    year: '未知'
+                },
+                post:{
+                    title:'',
+                    content:'',
+                    category: '',
+                    comments:[{
+                        user: {
+                            name: '',
+                            college:'',
+                            sex:'',
+                            year:''
+                        },
+                        postTime: new Date(),
+                        content: '',
+                        reply: [{username: '',
+                            postTime: new Date(),
+                            content: '',
+                            replyuser: ''
+                        }]
+                    }]
+                }
+            }
+        },
+
+        created () {
+            this.getView();
+        },
+
+        methods: {
+            getView () {
+                this.$http.get('http://localhost:8081/view?contentid=' + this.$route.query['id'] + '&page=' + this.page).then(response => {
+                    this.post = response.data.content;
+                    this.total = response.data.count;
+                    this.user = response.data.content.user;
+                    this.post.comments.forEach((comment) => {
+                        comment.postTime = this.formatDate(comment.postTime);
+                    });
+                }, response => {
+                    console.log('error:' + response);
+                })
+            },
+
+            handleCurrentChange(val) {
+                this.page = val;
+                this.getView();
+            },
+
+            onSubmitComment () {
+                if (this.editing_comment == '') {
+                    this.$message({
+                        message: '评论不能为空',
+                        type: 'warning'
+                    });
+                    return;
+                }
+                this.$http.post('http://localhost:8081/content_comment/post', {
+                    contentid: this.$route.query['id'],
+                    content: this.editing_comment,
+                }).then(() => {
+                    this.editing_comment = "";
+                    //如果拿后台返回的数据，那么造成的后果是不会及时分页
+//                    this.post = response.data.data;
+//                    this.post.comments.forEach((comment) => {
+//                        comment.postTime = this.formatDate(comment.postTime);
+//                    });
+                    this.getView();
+                }, response => {
+                    console.log('error:' + response);
+                })
+            },
+
+
+            onSubmitReply(comment, i, replyuser) {
+                if (comment == '') {
+                    this.$message({
+                        message: '回复不能为空',
+                        type: 'warning'
+                    });
+                    return;
+                }
+                this.$http.post('http://localhost:8081/reply_comment/post', {
+                    contentid: this.$route.query['id'],
+                    content: comment,
+                    postfloor: i,
+                    replyuser: replyuser
+                }).then(response => {
+                    this.comment_content = "";
+                    this.reply_content = "";
+                    this.post = response.data.data;
+                    this.post.comments.forEach((comment) => {
+                        comment.postTime = this.formatDate(comment.postTime);
+                    });
+                }, response => {
+                    console.log('error:' + response);
+                })
+            },
+        }
     }
-  },
-  components: {
-  	Header,
-  	Footer,
-  }
-}
 </script>
 
 <style>
-	body{
-		background: #f7f9fb;
-		margin:0;
-	}
-	#main{
-		margin: 40px auto;
-		width: 80%;
-		border-top: 3px solid #6ba484;
-		background: #fff;
-	}
-	.page{
-		padding: 20px;
-		border-bottom: 1.5px solid #e6e7ea;
-		display: flex;
-		align-items: center;
-	}
-	.post-title {
-		font-size: 28px;
+    body{
+        background: #f7f9fb;
+        margin:0;
+    }
+    /*#main{*/
+        /*margin: 40px auto;*/
+        /*width: 80%;*/
+        /*border-top: 3px solid #6ba484;*/
+        /*background: #fff;*/
+    /*}*/
+    .page{
+        padding: 20px;
+        border-bottom: 1.5px solid #e6e7ea;
+        display: flex;
+        align-items: center;
+    }
+    .post-title {
+        font-size: 28px;
         font-weight: 500;
         padding-left: 50px;
         line-height: 70px;
-		border-bottom: 1.5px solid #e6e7ea;
-	}
-	.avatar {
-		width: 120px;
-		height: 120px;
-		border-radius: 50%;
-		margin: 50px auto 10px;
-		background: #aaa;
-	}
-	.submit{
-		width: 120px;
-		margin: 20px 0;
-		color: #fff;
-	}
-	.username{
-		font-size: 20px;
-		color: #73BAB2;
-		line-height: 40px;
-		cursor: pointer;
-	}
-	.main-reply{
-		padding: 30px;
-		text-align: right;
-	}
-	.el-icon-bell {
-		font-weight: bold;
-		color: #73bab2;
-		font-size: 20px;
-	}
-	.connect {
-		cursor: pointer;
-		margin: 10px 0;
-		display: inline-block;
-		background: #73BAB2;
-		color: #fff;
-		border-radius: 5px;
-		padding: 3px 10px;
-	}
-	.singlepost{
-		display: flex;
-		justify-content: space-around;
-		border-bottom: 3px solid #7DBDB5;
-	}
-	.post-content{
-		min-height: 250px;
-	}
-	.post-reply{
-		border-top: 1.5px solid #e6e7ea;
-		margin:10px 0;
-		padding-top: 10px;
-		overflow: hidden;
-	}
-	.post-reply div{
-		text-align: right;
-		color: #C0C4CC;
-	}
-	.post-reply span{
-		color: #aaa;
-		margin-left: 10px;
-		cursor: pointer;
-	}
-	.post-option{
-		border-top: 1.5px solid #e6e7ea;
-		line-height: 43px;
-		display: flex;
-		justify-content: space-between;
-		color: #C0C4CC;
-	}
-	.el-icon-edit-outline {
-		font-size: 24px;
-		margin-right: 5px;
-	}
-	.poster {
-		position: absolute;
-		right:20px;
-		top: 20px;
-		background: #6ba484;
-		color: #fff;
-		padding: 2px 5px;
-		border-radius: 5px;
-	}
-	.post-left{
-		text-align: center;
-		width: 550px;
-		margin-bottom: 20px;
-		position: relative;
-	}
-	.post-right{
-		padding: 40px;
-		border-left: 1.5px solid #e6e7ea;
-	}
+        border-bottom: 1.5px solid #e6e7ea;
+    }
+    .avatar {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        margin: 50px auto 10px;
+        background: #aaa;
+    }
+    .submit{
+        width: 120px;
+        margin: 20px 0;
+        color: #fff;
+    }
+    .username{
+        font-size: 20px;
+        color: #73BAB2;
+        line-height: 40px;
+        cursor: pointer;
+    }
+    .main-reply{
+        padding: 30px;
+        text-align: right;
+    }
+    .el-icon-bell {
+        font-weight: bold;
+        color: #73bab2;
+        font-size: 20px;
+    }
+    .connect {
+        cursor: pointer;
+        margin: 10px 0;
+        display: inline-block;
+        background: #73BAB2;
+        color: #fff;
+        border-radius: 5px;
+        padding: 3px 10px;
+    }
+    .singlepost{
+        display: flex;
+        justify-content: space-around;
+        border-bottom: 3px solid #7DBDB5;
+    }
+    .post-content{
+        min-height: 250px;
+    }
+    .post-reply{
+        border-top: 1.5px solid #e6e7ea;
+        margin:10px 0;
+        padding-top: 10px;
+        overflow: hidden;
+    }
+    .post-reply div{
+        text-align: right;
+        color: #C0C4CC;
+    }
+    .post-reply span{
+        color: #aaa;
+        margin-left: 10px;
+        cursor: pointer;
+    }
+    .post-option{
+        border-top: 1.5px solid #e6e7ea;
+        line-height: 43px;
+        display: flex;
+        justify-content: space-between;
+        color: #C0C4CC;
+    }
+    .el-icon-edit-outline {
+        font-size: 24px;
+        margin-right: 5px;
+    }
+    .poster {
+        position: absolute;
+        right:20px;
+        top: 20px;
+        background: #6ba484;
+        color: #fff;
+        padding: 2px 5px;
+        border-radius: 5px;
+    }
+    .post-left{
+        text-align: center;
+        width: 250px;
+        margin-bottom: 20px;
+        position: relative;
+    }
+    .post-right{
+        padding: 40px;
+        flex: 1;
+        border-left: 1.5px solid #e6e7ea;
+    }
 </style>

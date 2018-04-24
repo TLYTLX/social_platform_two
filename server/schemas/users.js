@@ -23,5 +23,17 @@ module.exports = new mongoose.Schema({
     registerDate: {
         type:Date,
         default:Date.now
+    },
+    college: {
+        type: String,
+        default: '未知'
+    },
+    sex:{
+        type: String,
+        default: '未知'
+    },
+    year:{
+        type: String,
+        default: '未知'
     }
 });

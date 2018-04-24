@@ -28,8 +28,6 @@
     </div>
 </template>
 <script>
-import Header from '../../../components/header.vue';
-import Footer from '../../../components/footer.vue';
 export default {
   data() {
     return {
@@ -46,10 +44,6 @@ export default {
     	}
     }
   },
-  components: {
-  	Header,
-  	Footer,
-  },
   created(){
   }
 }
@@ -60,12 +54,12 @@ export default {
 		background: #f7f9fb;
 		margin:0;
 	}
-	#main{
-		margin: 40px auto;
-		width: 80%;
-		border-top: 3px solid #6ba484;
-		background: #fff;
-	}
+	/*#main{*/
+		/*margin: 40px auto;*/
+		/*width: 80%;*/
+		/*border-top: 3px solid #6ba484;*/
+		/*background: #fff;*/
+	/*}*/
 	.avatar {
 		display: inline-block;
 		width: 120px;

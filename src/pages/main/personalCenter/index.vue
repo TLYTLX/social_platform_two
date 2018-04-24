@@ -3,7 +3,7 @@
     	<div class="main">
         	<div class="menu">
                 <div class="avatar"></div>
-                <div class="username">{{user.name}}</div>
+                <div class="username">{{info.name}}</div>
                 <div :class="[menu==1? 'menu-item active':'menu-item']" @click="menu=1;title='我的资料'">个人资料</div>
                 <div :class="[menu==2? 'menu-item active':'menu-item']" @click="menu=2;title='我的帖子'">我的帖子</div>
                 <div :class="[menu==3? 'menu-item active':'menu-item']" @click="menu=3;title='我的消息'">我的消息</div>
@@ -18,8 +18,6 @@
     </div>
 </template>
 <script>
-import Header from '../../../components/header.vue';
-import Footer from '../../../components/footer.vue';
 import Info from './information/index.vue';
 import MyPost from './post/index.vue';
 import MyMessage from './message/index.vue';
@@ -84,8 +82,6 @@ export default {
     }
   },
   components: {
-  	Header,
-  	Footer,
   	Info,
   	MyPost,
   	MyMessage

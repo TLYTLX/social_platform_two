@@ -24,4 +24,6 @@
         //border:1px solid #dfe6ec;
         .el-form-item
             margin-bottom: 10px;
+    .point:hover
+        cursor: pointer;
 </style>

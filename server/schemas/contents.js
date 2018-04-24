@@ -1,6 +1,23 @@
 /**
  * Created by zhao on 2017/8/12.
  */
+
+// comments数据结构
+// [{
+//     user: {
+//         name: user.username,
+//             college:user.college,
+//             sex:user.sex,
+//             year:user.year
+//     },
+//     postTime: new Date(),
+//     content: req.body.content,
+//     reply: [{username: req.userInfo.username,
+//              postTime: new Date(),
+//              content: req.body.content,
+//              replyUser: ''
+//            }]
+// }]
 var mongoose = require('mongoose');
 
 // 文章的表结构

@@ -13,8 +13,6 @@
 </template>
 <script>
 import Search from '../../../components/search.vue';
-import Header from '../../../components/header.vue';
-import Footer from '../../../components/footer.vue';
 import PostMenu from '../../../components/postMenu.vue';
 import PostRange from '../../../components/postRange.vue';
 export default {
@@ -77,8 +75,6 @@ export default {
     }
   },
   components: {
-  	Header,
-  	Footer,
   	Search,
   	PostMenu,
   	PostRange

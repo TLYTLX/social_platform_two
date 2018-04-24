@@ -110,9 +110,6 @@ export default {
     }
   },
   components: {
-  },
-  created() {
-  	console.log(this.type);
   }
 }
 </script>

@@ -12,8 +12,6 @@
 </template>
 <script>
 import Search from '../../../components/search.vue';
-import Header from '../../../components/header.vue';
-import Footer from '../../../components/footer.vue';
 export default {
   data() {
     return {
@@ -39,8 +37,6 @@ export default {
     }
   },
   components: {
-  	Header,
-  	Footer,
   	Search
   }
 }
@@ -51,9 +47,9 @@ export default {
 		background: #f7f9fb;
 		margin:0;
 	}
-	#main{
-		margin: 40px 60px;
-	}
+	/*#main{*/
+		/*margin: 40px 60px;*/
+	/*}*/
 	.sale-block{
 		display: inline-block;
 		width: 180px;
