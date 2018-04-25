@@ -53,7 +53,6 @@ router.post('/user/register', function (req, res, next) {
         res.json(responseData);
     })
 })
-
 router.post('/user/login', function (req, res, next) {
     var username = req.body.username;
     var password = req.body.password;

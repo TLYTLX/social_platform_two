@@ -24,16 +24,29 @@ module.exports = new mongoose.Schema({
         type:Date,
         default:Date.now
     },
+    //专业
     college: {
         type: String,
         default: '未知'
     },
+    //性别
     sex:{
         type: String,
         default: '未知'
     },
+    //年级
     year:{
         type: String,
         default: '未知'
+    },
+    //简介
+    introduce:{
+        type: String,
+        default: '暂无'
+    },
+    //头像
+    avatar:{
+        type:String,
+        default:''
     }
 });

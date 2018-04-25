@@ -1,10 +1,10 @@
 <template>
     <div>
-        <div class="form" v-if="edit==0">
+        <div class="info-form" v-if="edit==0">
             <el-row>
                 <el-col :span="6" class="form-label" style="line-height: 140px">头像：</el-col>
                 <el-col :span="16" :offset="2">
-                    <div class="avatar" style="margin:0"></div>
+                    <img class="avatar" style="margin:0" :src="info.avatar">
                 </el-col>
             </el-row>
             <el-row>
@@ -28,7 +28,7 @@
                 <el-button style="margin: 20px" @click="edit=2">修改密码</el-button>
             </el-row>
         </div>
-        <edit-info v-if="edit==1"></edit-info>
+        <edit-info v-if="edit==1" :info="info"></edit-info>
         <change-pass v-if="edit==2"></change-pass>
     </div>
 </template>
@@ -50,7 +50,7 @@ export default {
 </script>
 
 <style>
-    .form {
+    .info-form {
         line-height: 40px;
         width: 500px;
         margin: 50px auto;

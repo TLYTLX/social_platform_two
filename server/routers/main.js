@@ -32,6 +32,130 @@ router.get('/', function (req, res, next) {
     res.json(responseData);
 })
 
+/*获取个人信息*/
+router.get('/my/info', function (req, res, next) {
+    var id = req.query.id;
+    User.find( { username: id} ).then(function (users) {
+        res.json({
+            userInfo: users[0]
+        });
+    });
+})
+
+/*编辑个人信息*/
+router.post('/my/modify/info', function (req, res, next) {
+    // 获取要修改用户的id
+    var id = req.body.id;
+    User.update({
+        _id: id,
+    },{
+        avatar: req.body.avatar,
+        year: req.body.year,
+        introduce: req.body.introduce,
+        college: req.body.college,
+        sex: req.body.sex,
+    }).then(function () {
+        responseData.code = 0;
+        responseData.message = '修改个人信息成功';
+        res.json(responseData);
+    }, function () {
+        responseData.code = 1;
+        responseData.message = '修改个人信息失败';
+        res.json(responseData);
+    })
+})
+
+/*用户修改密码*/
+router.post('/my/modify/password', function (req, res, next) {
+    // 获取要修改用户的id
+    var id = req.body.id;
+    var password = req.body.pass;
+    var newPass = req.body.newPass;
+    // 查询数据库中用户名和密码是否存在且对应, 如是, 则登陆成功
+    User.findOne({
+        _id: id,
+        password: password,
+    }).then(function (userInfo) {
+        if (!userInfo) {
+            responseData.code = 2;
+            responseData.message = '原密码错误';
+            res.json(responseData);
+            return;
+        } else {
+            User.update({
+            _id: id,
+        },{
+            password: newPass
+        }).then(function () {
+            responseData.code = 0;
+            responseData.message = '修改密码成功';
+            res.json(responseData);
+        }, function () {
+            responseData.code = 1;
+            responseData.message = '修改密码失败';
+            res.json(responseData);
+        })
+        }
+    })
+})
+
+/*获取个人发帖列表*/
+var mydata = {};
+router.get('/my/contents', function (req, res, next) {
+    var ObjectId = require('mongodb').ObjectId;
+    mydata.user = ObjectId(req.query.id);
+    mydata.count = 0;
+    mydata.page = Number(req.query.page || 1);
+    mydata.limit = 10;
+    mydata.pages = 0;
+    Content.find({user: mydata.user}).count().then(function (count) {
+        mydata.count = count;
+        mydata.pages = Math.ceil(mydata.count / mydata.limit);
+        var skip = (mydata.page - 1) * mydata.limit;
+        return Content.find({user: req.query.id}).sort({addTime: -1}).limit(mydata.limit).skip(skip);
+    }).then(function (contents) {
+        mydata.contents = contents;
+        res.json(mydata);
+    })
+})
+/*删除我的帖子*/
+router.get('/my/contents/delete', function (req, res, next) {
+    // 获取要删除帖子的id
+    var ids = req.query.id.split(',');
+    Content.deleteMany({
+        "_id":{
+            "$in":ids
+        }
+    }).then(function () {
+        responseData.code = 0;
+        responseData.message = '删除帖子成功';
+        res.json(responseData);
+    }, function () {
+        responseData.code = 1;
+        responseData.message = '删除帖子失败';
+        res.json(responseData);
+    })
+})
+
+/*修改我的帖子状态*/
+router.post('/my/contents/modify/status', function (req, res, next) {
+    // 获取要修改帖子的id
+    var id = req.body.id;
+    var isActive = req.body.isActive;
+    Content.update({
+        _id: id,
+    },{
+        isActive: isActive
+    }).then(function () {
+        responseData.code = 0;
+        responseData.message = '帖子修改成功';
+        res.json(responseData);
+    }, function () {
+        responseData.code = 1;
+        responseData.message = '帖子修改失败';
+        res.json(responseData);
+    })
+})
 
 /*获取帖子列表*/
 var data = {};

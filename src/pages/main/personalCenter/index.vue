@@ -1,17 +1,17 @@
 <template>
 	<div>
-    	<div class="main">
+    	<div class="personal-main">
         	<div class="menu">
-                <div class="avatar"></div>
-                <div class="username">{{info.name}}</div>
-                <div :class="[menu==1? 'menu-item active':'menu-item']" @click="menu=1;title='我的资料'">个人资料</div>
-                <div :class="[menu==2? 'menu-item active':'menu-item']" @click="menu=2;title='我的帖子'">我的帖子</div>
-                <div :class="[menu==3? 'menu-item active':'menu-item']" @click="menu=3;title='我的消息'">我的消息</div>
+                <img class="avatar" :src="info.avatar">
+                <div class="username">{{info.username}}</div>
+                <div :class="[menu==1? 'menu-item active':'from-left menu-item']" @click="menu=1;title='我的资料'">个人资料</div>
+                <div :class="[menu==2? 'menu-item active':'from-left menu-item']" @click="menu=2;title='我的帖子'">我的帖子</div>
+                <div :class="[menu==3? 'menu-item active':'from-left menu-item']" @click="menu=3;title='我的消息'">我的消息</div>
             </div>
         	<div class="content">
         		<div class="content-title">{{title}}</div>
         		<Info v-if="menu==1" :info="info"></Info>
-        		<my-post v-if="menu==2" :post="post"></my-post>
+        		<my-post v-if="menu==2"></my-post>
         		<my-message v-if="menu==3" :message="message"></my-message>
         	</div>
         </div>
@@ -26,13 +26,7 @@ export default {
     return {
     	menu: 1,
     	title: '我的资料',
-    	info:{
-    		name:'的建设的封建士大夫阶级',
-    		avatar:'',
-    		sex:'女',
-    		year:1980,
-    		introduce:'健康的看见对方的空间是发到空间里的实时监控可适当放宽觉得十分士大夫艰苦奋斗刷卡机'
-    	},
+    	info:{},
     	message:[
     	    {
     	    	username:'dsfdsds',
@@ -56,60 +50,108 @@ export default {
     	    	content:'发的数据库的分量接口发的收款付款链接发甲方的时刻监督司法会计发射点士大夫艰苦空间发的是艰苦大师傅大师傅艰苦8',
     	    },
     	],
-    	post:[
-            {
-                title: '单价多少积分多少积分多少发多少交付时间',
-                type_model: '二手交易',
-                date: '2018-03-04 08:03:34',
-                state: '冻结'
-            },{
-                title: '单价多少积分多少积分多少发多少交付时间',
-                type_model: '二手交易',
-                date: '2018-03-04 08:03:34',
-                state: '冻结'
-            },{
-                title: '单价多少积分多少积分多少发多少交付时间',
-                type_model: '二手交易',
-                date: '2018-03-04 08:03:34',
-                state: '冻结'
-            },{
-                title: '单价多少积分多少积分多少发多少交付时间',
-                type_model: '二手交易',
-                date: '2018-03-04 08:03:34',
-                state: '冻结'
-            },
-        ]
     }
   },
-  components: {
-  	Info,
-  	MyPost,
-  	MyMessage
-  }
+    components: {
+    	Info,
+    	MyPost,
+    	MyMessage
+    },
+    created(){
+        this.getInfo();
+    },
+    methods: {
+        getInfo () {
+            let obj = JSON.parse(document.cookie.substring(9));
+            let username = obj.username;
+            this.$http.get('http://localhost:8081/my/info?id=' + username).then(response => {
+                this.info = response.data.userInfo;
+            }, response => {
+                console.log('error:' + response);
+            })
+        },
+    }
 }
 </script>
 
 <style>
-	body{
-		background: #f7f9fb;
-		margin:0;
-	}
-	.main {
+	.personal-main {
 		display: flex;
-		width: 90%;
-		margin: 10px auto;
+        justify-content: center;
+		margin-top: 20px;
 	}
 	.menu{
 		width: 280px;
 		background: #73BAB2;
-		height: calc(100vh - 115px);
+		height: 600px;
+        text-align: center;
 	}
-	.menu-item {
-		line-height: 50px;
-		margin: 10px 30px;
-		text-align: center;
-		color: #fff;
-	}
+    /* ~~~~~~~ INIT. BTN ~~~~~~~ */
+
+    .menu-item {   
+        line-height: 50px;
+        margin: 10px 30px;
+        text-align: center;
+        position: relative; 
+        font-size: 16px;
+        color: #fff;
+        text-transform: uppercase;
+        -webkit-transition: all 600ms cubic-bezier(0.77, 0, 0.175, 1);
+        transition: all 600ms cubic-bezier(0.77, 0, 0.175, 1);  
+        -webkit-user-select: none;  
+           -moz-user-select: none;  
+            -ms-user-select: none;  
+                user-select: none;
+    }    
+
+    .btn:before, .btn:after {
+        content: '';
+        position: absolute; 
+        -webkit-transition: inherit;    
+        transition: inherit;
+        z-index: -1;
+    }    
+
+    .btn:hover {
+        color: #000;
+        -webkit-transition-delay: .6s;
+                transition-delay: .6s;
+    }    
+
+    .btn:hover:before {
+        -webkit-transition-delay: 0s;
+                transition-delay: 0s;
+    }    
+
+    .btn:hover:after {
+        background: #fff;
+        -webkit-transition-delay: .4s;
+                transition-delay: .4s;
+    }
+    /* From Left */
+
+    .from-left:before, 
+    .from-left:after {
+        top: 0;
+        width: 0;
+        height: 100%;
+    }    
+
+    .from-left:before {
+        right: 0;
+        border: 1px solid #fff;
+        border-left: 0;
+        border-right: 0;    
+    }    
+
+    .from-left:after {
+        left: 0;
+    }    
+
+    .from-left:hover:before,
+    .from-left:hover:after {
+        width: 100%;
+    }
 	.active{
 		font-size: 18px;
 		font-weight: bold;
@@ -122,7 +164,7 @@ export default {
 	.content{
 		margin-left: 30px;
 		width: 70%;
-		min-height: calc(100vh - 115px);
+		min-height: 600px;
 		background: #fff;
 	}
 	.content-title{

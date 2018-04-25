@@ -5,8 +5,8 @@
         </el-form-item>
         <el-form-item label="性别：">
             <el-radio-group v-model="form.sex">
-                <el-radio :label="0">男</el-radio>
-                <el-radio :label="1">女</el-radio>
+                <el-radio label="男">男</el-radio>
+                <el-radio label="女">女</el-radio>
             </el-radio-group>
         </el-form-item>
         <el-form-item label="年级：">
@@ -26,40 +26,54 @@
             <el-input type="textarea" :row="8" v-model="form.introduce"></el-input>
         </el-form-item>
         <el-form-item style="text-align: right">
-            <el-button type="primary" @click="" style="width: 120px">保存</el-button>
+            <el-button type="primary" @click="handleSubmit" style="width: 120px">保存</el-button>
         </el-form-item>
     </el-form>
 </template>
 <script>
 import UploadPicture from '../../../../components/uploadPicture.vue';
 export default {
-  data() {
-    return {
-        form: {
-            avatar: '',
-            year: '',
-            sex: '',
-            college: '',
-            introduce: '',
-        },
-        option: [],
-        imageUrl: ''
-      };
+    props:['info'],
+    data() {
+        return {
+            form: {
+                avatar: 'https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=1653084888,1892441245&fm=27&gp=0.jpg',
+                year: '',
+                sex: '',
+                college: '',
+                introduce: '',
+            },
+            option: [],
+            imageUrl: ''
+          };
     },
     methods: {
-        handleAvatarSuccess(res, file) {
-            this.imageUrl = URL.createObjectURL(file.raw);
-        },
-        beforeAvatarUpload(file) {
-            const isJPG = file.type === 'image/jpeg';
-            const isLt2M = file.size / 1024 / 1024 < 2;
-            if (!isJPG) {
-                this.$message.error('上传头像图片只能是 JPG 格式!');
-            }
-            if (!isLt2M) {
-                this.$message.error('上传头像图片大小不能超过 2MB!');
-            }
-            return isJPG && isLt2M;
+        handleSubmit() {
+            let obj = JSON.parse(document.cookie.substring(9));
+            let id = obj._id;
+            this.$http.post('http://localhost:8081/my/modify/info',{
+                id: id,
+                avatar: this.form.avatar,
+                year: this.form.year,
+                introduce: this.form.introduce,
+                college: this.form.college,
+                sex: this.form.sex,
+            }).then(response => {
+                if (response.data.code !== 0) {
+                    this.$message({
+                        message: '编辑个人信息失败',
+                        type: 'error'
+                    });
+                } else {
+                    this.$message({
+                        message: '编辑个人信息成功',
+                        type: 'success'
+                    });
+                    location.reload();
+                }
+            }, response => {
+                console.log('error:' + response);
+            })
         }
     },
     created() {
@@ -68,6 +82,10 @@ export default {
         for(let i=1990;i<y+5;i++){
             this.option.push(i);
         }
+        this.form.year = this.info.year;
+        this.form.college = this.info.college;
+        this.form.sex = this.info.sex;
+        this.form.introduce = this.info.introduce;
     },
     components: {
         UploadPicture

@@ -258,7 +258,7 @@
 
         .main
             display:flex;
-            padding:20px;
+            padding-top:5px;
             #levelTwo
                 position: relative;
                 min-height:88vh;

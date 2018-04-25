@@ -17,7 +17,7 @@
 
 <style lang="stylus">
     #app
-	    background-color:white;
+	    background-color:#f7f9fb;
     .toolbar
         background: #f2f2f2;
         padding: 10px;
