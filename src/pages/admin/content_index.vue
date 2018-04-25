@@ -42,9 +42,8 @@
             <el-table-column prop="views" label="阅读量">
             </el-table-column>
             <el-table-column
-                fixed="right"
                 label="操作"
-                width="100">
+                width="120">
                 <template scope="scope">
                     <el-button type="text" size="small" @click="handleStatus(scope.$index, scope.row)">{{getStatus(scope.row)}}</el-button>
                     <el-button type="text" size="small" @click="handleDel(scope.$index, scope.row)">删除</el-button>

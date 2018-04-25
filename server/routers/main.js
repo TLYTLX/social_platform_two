@@ -33,11 +33,12 @@ router.get('/', function (req, res, next) {
 })
 
 
-/*获取文章列表*/
+/*获取帖子列表*/
 var data = {};
 router.get('/content', function (req, res, next) {
     data.category = req.query.category || '';
-    var filter = req.query.title ? req.query.title.trim() : '';
+    var type = req.query.type || '';
+    var value = req.query.value.trim() || '';
     data.count = 0;
     data.page = Number(req.query.page || 1);
     data.limit = 10;
@@ -46,8 +47,10 @@ router.get('/content', function (req, res, next) {
     if (data.category) {
         where.category = data.category;
     }
-    if (filter) {
-        where.title = new RegExp(filter,"gi");
+    if (type && value) {
+        where[type] = new RegExp(value,"gi");
+    } else if (value) {
+        where.title = new RegExp(value,"gi");
     }
     Content.find(where).count().then(function (count) {
         data.count = count;
@@ -64,7 +67,7 @@ router.get('/content', function (req, res, next) {
     })
 })
 
-/*获取热赞文章列表*/
+/*获取热赞帖子列表*/
 var likedata = {};
 router.get('/content/like', function (req, res, next) {
     likedata.category = req.query.category || '';
@@ -80,7 +83,7 @@ router.get('/content/like', function (req, res, next) {
     });
 })
 
-/*文章详情*/
+/*帖子详情*/
 var contentDetail = {};
 router.get('/view', function (req, res, next) {
     var contentId = req.query.contentid;
@@ -116,7 +119,10 @@ router.post('/content/add', function (req, res, next) {
         description: req.body.description || '',
         content: req.body.content,
         user: req.userInfo._id,
-        addTime: new Date()
+        addTime: new Date(),
+        area: req.body.area || '',
+        meetTime: req.body.meetTime,
+        type: req.body.type || '',
     }).save().then(function () {
         responseData.code = 0;
         responseData.message = '保存帖子成功';
@@ -129,7 +135,7 @@ router.post('/content/add', function (req, res, next) {
 })
 
 /*
- * 表白墙帖子点赞数加1
+ * 帖子点赞数加1
  * */
 router.post('/like', function (req, res, next) {
     var contentId = req.query.contentid;
@@ -152,7 +158,7 @@ router.post('/like', function (req, res, next) {
 })
 
 /*
- * 表白墙提交帖子评论
+ * 提交帖子评论
  * */
 router.post('/content_comment/post', function (req, res, next) {
     // 文章ID
@@ -185,7 +191,7 @@ router.post('/content_comment/post', function (req, res, next) {
     })
 })
 /*
- * 表白墙提交回复评论
+ * 提交回复评论
  * */
 router.post('/reply_comment/post', function (req, res, next) {
     // 帖子id

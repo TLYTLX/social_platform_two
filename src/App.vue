@@ -26,4 +26,18 @@
             margin-bottom: 10px;
     .point:hover
         cursor: pointer;
+    body
+        background: #f7f9fb;
+        margin:0;
+    .router-link
+        display: block;
+        color: #73bab2;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+        margin-bottom: 10px;
+        font-size: 17px;
+    .router-link:hover
+        cursor: pointer;
+        font-size: 18px;
 </style>

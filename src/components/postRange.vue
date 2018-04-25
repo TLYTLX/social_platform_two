@@ -3,7 +3,7 @@
 		<div class="range-title">月度热赞榜</div>
 		<div class="range-one" v-for="(i,index) in list">
 			<div class="range-text">
-                <router-link :to="{path:'/post', query: {id: i._id}}" class="news-title">
+                <router-link :to="{path:'/post', query: {id: i._id}}" class="router-link">
                     {{index+1}}.{{i.title}}
                 </router-link>
             </div>

@@ -67,5 +67,22 @@ module.exports = new mongoose.Schema({
     // 通过关键字搜索
     keyWord: {
         type: String
-    }
+    },
+
+    //可供选择的字段
+
+    //相约地点
+    area: {
+        type: String,
+        default: ''
+    },
+    // 相约类型
+    type: {
+        type: String,
+        default: ''
+    },
+    //相约时间
+    meetTime: {
+        type: Date
+    },
 });

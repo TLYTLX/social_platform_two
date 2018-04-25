@@ -215,6 +215,7 @@
 </script>
 
 <style lang="stylus" rel="stylesheet/stylus">
+
     .text-danger{
         color:#ff4949;
     }

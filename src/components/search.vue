@@ -17,19 +17,19 @@
                  :rules="addFormRules"
                  ref="addForm"
                  label-width="80px">
-            <el-form-item class="row" label="标题">
-                <el-input v-model="formData.title" placeholder="请输入内容"></el-input>
+            <el-form-item class="row" label="标题" prop="title">
+                <el-input v-model="formData.title"  placeholder="请输入内容"></el-input>
             </el-form-item>
             <el-form-item class="row" label="图片" v-if="type=='sale'">
                 <upload-picture></upload-picture>
             </el-form-item>
-            <el-form-item class="row" v-if="type=='anonymous'" label="代号">
+            <el-form-item class="row" v-if="type=='anonymous'" label="代号" prop="name">
                 <el-input v-model="formData.name" placeholder="请输入内容"></el-input>
             </el-form-item>
             <el-form-item class="row">
                 <Select :type="type"></Select>
             </el-form-item>
-            <el-form-item class="row" label="描述">
+            <el-form-item class="row" label="描述" prop="content">
                 <el-input v-model="formData.content"
                           type="textarea"
                           :autosize="{ minRows: 10}"
@@ -106,7 +106,7 @@
                                     name: '',
                                     content: ''
                                 };
-                                this.$emit('getProfessList');
+                                this.$emit('getList');
                             } else {
                                 this.$message({
                                     message: response.data.message,
@@ -119,7 +119,7 @@
             },
 
             getList () {
-                this.$emit('getProfessList',this.input);
+                this.$emit('getList',this.input);
             }
         }
     }
@@ -127,7 +127,7 @@
 
 <style>
     #filter {
-        padding: 20px 40px;
+        padding: 20px 10px;
         border-bottom: 1px solid #aaa;
         background: #fff;
     }

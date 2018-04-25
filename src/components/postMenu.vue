@@ -1,7 +1,7 @@
 <template>
     <div>
 	    <div class="news">
-	    	<router-link :to="{path:'/post', query: {id: post._id}}" class="news-title">{{post.title}}</router-link>
+	    	<router-link :to="{path:'/post', query: {id: post._id}}" class="router-link">{{post.title}}</router-link>
 	    	<div style="display: flex">
    	    		<div class="news-content" style="-webkit-box-orient: vertical;">{{post.content}}</div>
    	    		<div class="news-like point" @click="addLike">
@@ -37,19 +37,6 @@ export default {
 </script>
 
 <style>
-	.news-title {
-		display: block;
-		color: #73bab2;
-		text-overflow: ellipsis;
-		overflow: hidden;
-		white-space: nowrap;
-		margin-bottom: 10px;
-		font-size: 17px;
-	}
-	.news-title:hover {
-		cursor: pointer;
-		font-size: 18px;
-	}
 	.news-content {
 		border: 1px solid #bbb;
 		background: #f5f5f5;

@@ -1,6 +1,6 @@
 <template>
     <div style="width:100%">
-        <Search type="profess" @getProfessList="getList"></Search>
+        <search type="profess" @getList="getList"></search>
         <div id="main">
             <div class="mainleft">
                 <div v-for="i in data">
@@ -18,7 +18,7 @@
     </div>
 </template>
 <script>
-    import Search from '../../../components/search.vue';
+    import Search from './search.vue';
     import PostMenu from '../../../components/postMenu.vue';
     import PostRange from '../../../components/postRange.vue';
     export default {
@@ -42,7 +42,7 @@
         methods: {
             getList (filterTitle = '') {
                 this.$http.get(this.listUrl + '?page='+ this.page +
-                    '&category=' + '表白墙' + '&title=' + filterTitle
+                    '&category=' + '表白墙' + '&value=' + filterTitle
                 ).then(response => {
                     response.data.contents.forEach((content) => {
                         content.addTime = this.formatDate(content.addTime);

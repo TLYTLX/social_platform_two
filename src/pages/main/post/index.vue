@@ -3,7 +3,7 @@
         <div id="main">
             <div class="page">
                 <el-button>
-                    <router-link to="/profess">
+                    <router-link :to=path>
                         返回本版
                     </router-link>
                 </el-button>
@@ -101,10 +101,21 @@
     </div>
 </template>
 <script>
+
+    const CATEGORY = {
+        '相约华工': '/date',
+        '二手市场': '/sale',
+        '匿名论坛': '/anonymous',
+        '新鲜事': 'news',
+        '表白墙': '/profess',
+        '合租信息': 'rent'
+    };
+
     export default {
 
         data() {
             return {
+                path: '',
                 editing_comment: '',
                 reply_content: '',
                 comment_content:'',
@@ -149,6 +160,7 @@
                 this.$http.get('http://localhost:8081/view?contentid=' + this.$route.query['id'] + '&page=' + this.page).then(response => {
                     this.post = response.data.content;
                     this.total = response.data.count;
+                    this.path = CATEGORY[response.data.content.category];
                     this.user = response.data.content.user;
                     this.post.comments.forEach((comment) => {
                         comment.postTime = this.formatDate(comment.postTime);
