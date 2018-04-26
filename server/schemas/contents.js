@@ -85,4 +85,10 @@ module.exports = new mongoose.Schema({
     meetTime: {
         type: Date
     },
+
+    // 匿名
+    alias: {
+        type: String,
+        default: ''
+    }
 });

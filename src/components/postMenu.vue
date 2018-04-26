@@ -11,7 +11,7 @@
                     <div style="margin: 20px auto;">阅读量</div>
                     {{post.views}}</div>
    	    		<div class="news-like">
-   	    			<div style="margin: 20px auto;">回复</div>
+   	    			<div style="margin: 20px auto;">评论</div>
    	    		{{post.comments.length}}</div>
    	    	</div>
 	    </div>

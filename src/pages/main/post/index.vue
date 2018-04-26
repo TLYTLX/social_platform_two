@@ -20,7 +20,7 @@
                     <router-link to="/profile" style="text-decoration: none;">
                         <div class="username">{{user.username}}</div>
                     </router-link>
-                    <div class="info">{{user.college}}  {{user.year}}级</div>
+                    <div class="info">{{user.college}}学院  {{user.year}}年级</div>
                 </div>
                 <div class="post-right">
                     <div class="post-content">{{post.content}}</div>
@@ -115,6 +115,8 @@
 
         data() {
             return {
+                //是否是匿名模块
+                alias: '',
                 path: '',
                 editing_comment: '',
                 reply_content: '',
@@ -161,7 +163,14 @@
                     this.post = response.data.content;
                     this.total = response.data.count;
                     this.path = CATEGORY[response.data.content.category];
-                    this.user = response.data.content.user;
+                    this.alias = response.data.content.alias;
+                    if(this.alias) {
+                        this.user.username = this.alias;
+                        this.user.college = '匿名';
+                        this.user.year = '匿名';
+                    } else {
+                        this.user = response.data.content.user;
+                    }
                     this.post.comments.forEach((comment) => {
                         comment.postTime = this.formatDate(comment.postTime);
                     });
@@ -198,7 +207,6 @@
                     console.log('error:' + response);
                 })
             },
-
 
             onSubmitReply(comment, i, replyuser) {
                 if (comment == '') {

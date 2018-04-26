@@ -2,7 +2,7 @@
     <section>
         <el-table
             :border="false"
-            :data="tableData" class="rent-table">
+            :data="tableData">
             <el-table-column type="index" width="80" label="序号">
             </el-table-column>
             <el-table-column

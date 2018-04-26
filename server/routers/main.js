@@ -71,7 +71,7 @@ router.post('/my/modify/password', function (req, res, next) {
     var id = req.body.id;
     var password = req.body.pass;
     var newPass = req.body.newPass;
-    // 查询数据库中用户名和密码是否存在且对应, 如是, 则登陆成功
+    // 查询数据库中用户名和密码是否存在且对应, 如是, 则可以进行修改
     User.findOne({
         _id: id,
         password: password,
@@ -182,7 +182,13 @@ router.get('/content', function (req, res, next) {
 
         var skip = (data.page - 1) * data.limit;
 
-        return Content.find().where(where).sort({addTime: -1}).limit(data.limit).skip(skip).populate(['user']);
+        if (data.category === '匿名论坛') {
+            return Content.find().where(where).sort({addTime: -1}).limit(data.limit).skip(skip);
+        } else {
+            return Content.find().where(where).sort({addTime: -1})
+                   .limit(data.limit).skip(skip)
+                   .populate({path: 'user', select: 'username college sex year introduce avatar'});
+        }
 
     }).then(function (contents) {
         data.contents = contents;
@@ -200,36 +206,21 @@ router.get('/content/like', function (req, res, next) {
     if (likedata.category) {
         where.category = likedata.category;
     }
-    Content.where(where).sort({like: -1}).limit(likedata.number).populate(['user']).then(function (contents) {
-        likedata.contents = contents;
-        // console.log(data);
-        res.json(likedata);
-    });
-})
-
-/*帖子详情*/
-var contentDetail = {};
-router.get('/view', function (req, res, next) {
-    var contentId = req.query.contentid;
-    contentDetail.count = 0;
-    contentDetail.page = Number(req.query.page || 1);
-    contentDetail.limit = 10;
-    contentDetail.pages = 0;
-
-    Content.findOne({
-        _id: contentId,
-    }).populate(['user']).then(function (content) {
-        contentDetail.count = content.comments.length;
-        content.views = content.views + 1;
-        content.save();
-        Content.findOne({
-            _id: contentId,
-        }, {comments: {$slice: [(contentDetail.page-1)*contentDetail.limit,contentDetail.limit]}}).populate(['user']).then(function (content) {
-            contentDetail.content = content;
-            res.json(contentDetail);
+    if (likedata.category === '匿名论坛') {
+        Content.where(where).sort({like: -1}).limit(likedata.number).then(function (contents) {
+            likedata.contents = contents;
+            // console.log(data);
+            res.json(likedata);
         });
-
-    })
+    } else {
+        Content.where(where).sort({like: -1}).limit(likedata.number)
+            .populate({path: 'user', select: 'username college sex year introduce avatar'})
+            .then(function (contents) {
+            likedata.contents = contents;
+            // console.log(data);
+            res.json(likedata);
+        });
+    }
 })
 
 /*
@@ -247,6 +238,7 @@ router.post('/content/add', function (req, res, next) {
         area: req.body.area || '',
         meetTime: req.body.meetTime,
         type: req.body.type || '',
+        alias: req.body.alias || ''
     }).save().then(function () {
         responseData.code = 0;
         responseData.message = '保存帖子成功';
@@ -255,6 +247,42 @@ router.post('/content/add', function (req, res, next) {
         responseData.code = 1;
         responseData.message = '保存帖子失败';
         res.json(responseData);
+    })
+})
+
+/*帖子详情*/
+var contentDetail = {};
+router.get('/view', function (req, res, next) {
+    var contentId = req.query.contentid;
+    contentDetail.count = 0;
+    contentDetail.page = Number(req.query.page || 1);
+    contentDetail.limit = 10;
+    contentDetail.pages = 0;
+
+    Content.findOne({
+        _id: contentId,
+    }).then(function (content) {
+        contentDetail.count = content.comments.length;
+        content.views = content.views + 1;
+        content.save();
+
+        if (content.category === '匿名论坛') {
+            Content.findOne({
+                _id: contentId,
+            }, {comments: {$slice: [(contentDetail.page-1)*contentDetail.limit,contentDetail.limit]}}).then(function (content) {
+                contentDetail.content = content;
+                res.json(contentDetail);
+            });
+        } else {
+            Content.findOne({
+                _id: contentId,
+            }, {comments: {$slice: [(contentDetail.page-1)*contentDetail.limit,contentDetail.limit]}})
+                .populate({path: 'user', select: 'username college sex year introduce avatar'})
+                .then(function (content) {
+                contentDetail.content = content;
+                res.json(contentDetail);
+            });
+        }
     })
 })
 
@@ -267,7 +295,7 @@ router.post('/like', function (req, res, next) {
 
     Content.findOne({
         _id: contentId,
-    }).populate(['user']).then(function (content) {
+    }).populate({path: 'user', select: 'username college sex year introduce avatar'}).then(function (content) {
         content.like = content.like + 1;
         return content.save();
     }).then(function () {
@@ -288,24 +316,45 @@ router.post('/content_comment/post', function (req, res, next) {
     // 文章ID
     var contentId = req.body.contentid || '';
     var postData = {};
-    // 评论信息
-    User.findOne ({username: req.userInfo.username}).then (function (user) {
-        postData = {
-            user: {
-                name: req.userInfo.username,
-                college:user.college,
-                sex:user.sex,
-                year:user.year
-            },
-            postTime: new Date(),
-            content: req.body.content,
-            reply: []
+
+    Content.findOne({
+        _id: contentId,
+    }).then(function (content) {
+        if (content.category === '匿名论坛') {
+            postData = {
+                // 评论信息
+                user: {
+                    name: '匿名用户',
+                    college:'匿名',
+                    sex:'匿名',
+                    year:'匿名'
+                },
+                postTime: new Date(),
+                content: req.body.content,
+                reply: []
+            };
+        } else {
+            // 评论信息
+            User.findOne ({username: req.userInfo.username}).then (function (user) {
+                postData = {
+                    user: {
+                        name: req.userInfo.username,
+                        college:user.college,
+                        sex:user.sex,
+                        year:user.year
+                    },
+                    postTime: new Date(),
+                    content: req.body.content,
+                    reply: []
+                };
+            });
         }
-    });
+    })
+
     // 查询当前文章的信息
     Content.findOne({
         _id: contentId,
-    }).populate(['user']).then(function (content) {
+    }).populate({path: 'user', select: 'username college sex year introduce avatar'}).then(function (content) {
         content.comments.push(postData);
         return content.save();
     }).then(function (newContent) {
@@ -324,17 +373,32 @@ router.post('/reply_comment/post', function (req, res, next) {
     var postFloor = req.body.postfloor || 0;
     // 回复的对象
     var replyUser = req.body.replyuser || '';
-    var replyComment = {
-        username: req.userInfo.username,
-        postTime: new Date(),
-        content: req.body.content,
-        replyUser: replyUser
-    };
+    var replyComment = {};
+
+    Content.findOne({
+        _id: contentId,
+    }).then(function (content) {
+        if (content.category === '匿名论坛') {
+            replyComment = {
+                username: '匿名用户',
+                postTime: new Date(),
+                content: req.body.content,
+                replyUser: replyUser
+            };
+        } else {
+            replyComment = {
+                username: req.userInfo.username,
+                postTime: new Date(),
+                content: req.body.content,
+                replyUser: replyUser
+            };
+        }
+    })
 
     // 查询当前文章的信息
     Content.findOne({
         _id: contentId
-    }).populate(['user']).then(function (content) {
+    }).populate({path: 'user', select: 'username college sex year introduce avatar'}).then(function (content) {
         content.comments[postFloor].reply.push(replyComment);
         //混合类型修改完必须调用markModified splice能成功是因为 mongooseArray 内在调用了this._markModified()
         // 详细解释见：http://cnodejs.org/topic/516ab9c96d38277306376cad
