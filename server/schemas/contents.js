@@ -94,7 +94,7 @@ module.exports = new mongoose.Schema({
     alias: {
         type: String,
         default: ''
-    }
+    },
 }, {
 usePushEach: true
 });
