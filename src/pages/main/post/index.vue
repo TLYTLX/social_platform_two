@@ -16,7 +16,7 @@
             <div class="singlepost">
                 <div class="post-left">
                     <div class="poster">贴主</div>
-                    <router-link to="/profile"><div class="avatar"></div></router-link>
+                    <router-link to="/profile"><img class="avatar" :src="user.avatar"></router-link>
                     <router-link to="/profile" style="text-decoration: none;">
                         <div class="username">{{user.username}}</div>
                     </router-link>
@@ -29,7 +29,7 @@
 
             <div class="singlepost" v-for="(i,index) in post.comments">
                 <div class="post-left">
-                    <router-link to="/profile"><div class="avatar"></div></router-link>
+                    <router-link to="/profile"><img class="avatar" :src="i.user.avatar"></router-link>
                     <router-link to="/profile" style="text-decoration: none;">
                         <div class="username">{{i.user.name}}</div>
                     </router-link>

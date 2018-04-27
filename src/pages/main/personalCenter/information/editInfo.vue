@@ -49,10 +49,8 @@ export default {
     },
     methods: {
         handleSubmit() {
-            let obj = JSON.parse(document.cookie.substring(9));
-            let id = obj._id;
             this.$http.post('http://localhost:8081/my/modify/info',{
-                id: id,
+                id: this.info._id,
                 avatar: this.form.avatar,
                 year: this.form.year,
                 introduce: this.form.introduce,

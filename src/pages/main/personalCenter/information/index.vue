@@ -29,7 +29,7 @@
             </el-row>
         </div>
         <edit-info v-if="edit==1" :info="info"></edit-info>
-        <change-pass v-if="edit==2"></change-pass>
+        <change-pass v-if="edit==2" :id="info._id"></change-pass>
     </div>
 </template>
 <script>

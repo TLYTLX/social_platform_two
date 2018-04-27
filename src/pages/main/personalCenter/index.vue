@@ -11,8 +11,8 @@
         	<div class="content">
         		<div class="content-title">{{title}}</div>
         		<Info v-if="menu==1" :info="info"></Info>
-        		<my-post v-if="menu==2"></my-post>
-        		<my-message v-if="menu==3" :message="message"></my-message>
+        		<my-post v-if="menu==2" :user="user"></my-post>
+        		<my-message v-if="menu==3" :user="user"></my-message>
         	</div>
         </div>
     </div>
@@ -26,30 +26,8 @@ export default {
     return {
     	menu: 1,
     	title: '我的资料',
-    	info:{},
-    	message:[
-    	    {
-    	    	username:'dsfdsds',
-    	    	type:'新鲜事',
-    	    	title:'是的方法对付的是顺丰到付到付的',
-    	    	content:'发的数据库的分量接口发的收款付款链接发甲方的时刻监督司法会计发射点士大夫艰苦空间发的是艰苦大师傅大师傅艰苦8',
-    	    },{
-    	    	username:'dsfdsds',
-    	    	type:'新鲜事',
-    	    	title:'是的方法对付的是顺丰到付到付的',
-    	    	content:'发的数据库的分量接口发的收款付款链接发甲方的时刻监督司法会计发射点士大夫艰苦空间发的是艰苦大师傅大师傅艰苦8',
-    	    },{
-    	    	username:'dsfdsds',
-    	    	type:'新鲜事',
-    	    	title:'是的方法对付的是顺丰到付到付的',
-    	    	content:'发的数据库的分量接口发的收款付款链接发甲方的时刻监督司法会计发射点士大夫艰苦空间发的是艰苦大师傅大师傅艰苦8',
-    	    },{
-    	    	username:'dsfdsds',
-    	    	type:'新鲜事',
-    	    	title:'是的方法对付的是顺丰到付到付的',
-    	    	content:'发的数据库的分量接口发的收款付款链接发甲方的时刻监督司法会计发射点士大夫艰苦空间发的是艰苦大师傅大师傅艰苦8',
-    	    },
-    	],
+        user: {},
+    	info: {},
     }
   },
     components: {
@@ -58,13 +36,12 @@ export default {
     	MyMessage
     },
     created(){
+        this.user = JSON.parse(document.cookie.substring(9));
         this.getInfo();
     },
     methods: {
         getInfo () {
-            let obj = JSON.parse(document.cookie.substring(9));
-            let username = obj.username;
-            this.$http.get('http://localhost:8081/my/info?id=' + username).then(response => {
+            this.$http.get('http://localhost:8081/my/info?id=' + this.user._id).then(response => {
                 this.info = response.data.userInfo;
             }, response => {
                 console.log('error:' + response);

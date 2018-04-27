@@ -16,6 +16,7 @@
 </template>
 <script>
 export default {
+    props:['id'],
   data() {
     var validatePass = (rule, value, callback) => {
         if (value === '') {
@@ -65,10 +66,8 @@ export default {
         handleChange(formName) {
             this.$refs[formName].validate((valid) => {
                 if (valid) {
-                    let obj = JSON.parse(document.cookie.substring(9));
-                    let id = obj._id;
                     this.$http.post('http://localhost:8081/my/modify/password',{
-                        id: id,
+                        id: this.id,
                         pass: this.form.oldPass,
                         newPass: this.form.newPass
                     }).then(response => {
