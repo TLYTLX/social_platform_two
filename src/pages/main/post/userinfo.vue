@@ -1,19 +1,15 @@
 <template>
 	<div>
-        <div id="main">
-        	<div class="avatar"></div>
+        <div id="main-info">
+        	<img class="avatar" :src="user.avatar">
         	<div class="info">
-        		<div class="username">{{user.name}}[{{user.state}}]</div>
+        		<div class="username">{{user.username}}</div>
         		<div>{{user.introduce}}</div>
         	</div>
-       		<div class="connect">
-       			<i class="el-icon-bell"></i>
-       		    联系TA
-       		</div>
         	<div class="main-info">
         		<div class="info-title">基本信息</div>
         		<div class="info-block">
-        			<div><span>昵称：</span>{{user.name}}</div>
+        			<div><span>昵称：</span>{{user.username}}</div>
         			<div><span>性别：</span>{{user.sex}}</div>
         			<div><span>学院：</span>{{user.college}}</div>
         			<div><span>年级：</span>{{user.year}}</div>
@@ -21,7 +17,7 @@
         		<div class="info-title">活跃概况</div>
         		<div class="info-block">
         			<div><span>发帖数：</span>{{user.count}}</div>
-        			<div><span>上次在线时间：</span>{{user.lasttime}}</div>
+        			<div><span>注册时间：</span>{{user.registerDate}}</div>
         		</div>
         	</div>
         </div>
@@ -29,23 +25,26 @@
 </template>
 <script>
 export default {
-  data() {
-    return {
-    	title:'',
-    	user:{
-    		name:'大家看法的数据库',
-    		state:'在线',
-    		introduce:'kjfdsj个人简介kldssjkjlsjkfskjldsfsfdkj',
-    		sex:'女',
-    		year:2015,
-    		college:'软件学院',
-    		count:456,
-    		lasttime:'2018-07-23 08:34:23'
-    	}
+    data() {
+        return {
+        	title:'',
+        	user:{}
+        }
+    },
+    methods: {
+   	    getInfo() {
+   		    this.$http.get('http://localhost:8081/information/?name=' + this.$route.query['name']).then(response => {
+   		    	this.user = response.data.userInfo;
+   		    	this.user.registerDate = this.formatDate(this.user.registerDate);
+                console.log(response);
+            }, response => {
+                console.log('error:' + response);
+            })
+     	}
+    },
+    created(){
+  	    this.getInfo();
     }
-  },
-  created(){
-  }
 }
 </script>
 
@@ -54,12 +53,12 @@ export default {
 		background: #f7f9fb;
 		margin:0;
 	}
-	/*#main{*/
-		/*margin: 40px auto;*/
-		/*width: 80%;*/
-		/*border-top: 3px solid #6ba484;*/
-		/*background: #fff;*/
-	/*}*/
+	#main-info{
+		margin: 40px auto;
+		width: 80%;
+		border-top: 3px solid #6ba484;
+		background: #fff;
+	}
 	.avatar {
 		display: inline-block;
 		width: 120px;

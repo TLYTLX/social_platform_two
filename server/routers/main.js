@@ -42,6 +42,29 @@ router.get('/my/info', function (req, res, next) {
     });
 })
 
+/*获取他人信息*/
+var userinfo = {};
+router.get('/information', function (req, res, next) {
+    var name = req.query.name;
+    User.findOne( { username: name} ).then(function (user) {
+        console.log(user);
+        userinfo._id = user._id;
+        userinfo.username = user.username;
+        userinfo.year = user.year;
+        userinfo.college = user.college;
+        userinfo.introduce = user.introduce;
+        userinfo.sex = user.sex;
+        userinfo.avatar = user.avatar;
+        userinfo.registerDate = user.registerDate;
+        return Content.find({user: userinfo._id}).count().then(function (count) {
+            userinfo.count = count;
+            res.json({
+                userInfo: userinfo
+            });
+        })
+    });
+})
+
 /*编辑个人信息*/
 router.post('/my/modify/info', function (req, res, next) {
     // 获取要修改用户的id
@@ -219,7 +242,6 @@ router.get('/my/message', function (req, res, next) {
         })
         myMessage.count = list.length;
         myMessage.contents = list.slice((myMessage.page-1)*myMessage.limit,myMessage.page*myMessage.limit);
-        console.log(myMessage);
         res.json(myMessage);
     })
 })
@@ -228,7 +250,6 @@ router.get('/my/message', function (req, res, next) {
 router.post('/my/contents/modify/readTime', function (req, res, next) {
     var id = req.body.id;
     var time = req.body.time;
-    console.log(req.body);
     Content.update({
         _id: id
     },{
@@ -414,7 +435,7 @@ router.post('/content_comment/post', function (req, res, next) {
                     name: '匿名用户',
                     college:'匿名',
                     sex:'匿名',
-                    year:'匿名'
+                    year:'匿名',
                 },
                 postTime: new Date(),
                 content: req.body.content,
@@ -428,7 +449,8 @@ router.post('/content_comment/post', function (req, res, next) {
                         name: req.userInfo.username,
                         college:user.college,
                         sex:user.sex,
-                        year:user.year
+                        year:user.year,
+                        avatar:user.avatar
                     },
                     postTime: new Date(),
                     content: req.body.content,

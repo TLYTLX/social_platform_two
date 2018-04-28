@@ -11,6 +11,7 @@ import content_add from '../pages/admin/content_add.vue';
 import content_edit from '../pages/admin/content_edit.vue';
 
 import personal from '../pages/main/personalCenter/index.vue';
+import profile from '../pages/main/post/userinfo.vue'
 import post from '../pages/main/post/index.vue';
 import news from '../pages/main/news/index.vue';
 import sale from '../pages/main/sale/index.vue';
@@ -45,6 +46,11 @@ export default new Router({
                     name: 'post',
                     path: '/post',
                     component: post
+                },
+                {
+                    name: 'profile',
+                    path: '/profile',
+                    component: profile
                 },
                 {
                     name: 'sale',
