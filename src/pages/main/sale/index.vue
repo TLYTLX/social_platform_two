@@ -1,44 +1,60 @@
 <template>
 	<div style="width:100%">
-        <Search type="sale"></Search>
+        <Search  @getList="getList"></Search>
         <div id="main">
-        	<router-link to="/post" v-for="i in data" class="sale-block">
-        		<div class="sale-img"></div>
+        	<router-link :to="{path:'/post', query: {id: i._id}}" v-for="i in data" class="sale-block">
+        		<img class="sale-img" :src="i.image">
         		<div class="sale-title">【{{i.type}}】{{i.title}}</div>
-        		<div>{{i.time}}</div>
+        		<div>{{i.addTime}}</div>
         	</router-link>
         </div>
+        <el-pagination layout="prev, pager, next"
+                       v-if="total>30"
+                       @current-change="handleCurrentChange"
+                       :page-size="30"
+                       :total="total">
+        </el-pagination>
     </div>
 </template>
 <script>
-import Search from '../../../components/search.vue';
+import Search from './search.vue';
 export default {
-  data() {
-    return {
-    	data:[
-    	    {
-    	    	title:'大师傅犯得上大师傅发射点发射点方法对付的',
-    	    	time: '2018-07-03',
-    	    	type: '衣服'
-    	    },{
-    	    	title:'大师傅犯得上大师傅发射点发射点方法对付的',
-    	    	time: '2018-07-03',
-    	    	type: '衣服'
-    	    },{
-    	    	title:'大师傅犯得上大师傅发射点发射点方法对付的',
-    	    	time: '2018-07-03',
-    	    	type: '衣服'
-    	    },{
-    	    	title:'大师傅犯得上大师傅发射点发射点方法对付的',
-    	    	time: '2018-07-03',
-    	    	type: '衣服'
-    	    },
-    	]
+    data() {
+        return {
+        	data:[],
+            listUrl: 'http://localhost:8081/content',
+            likeListUrl: 'http://localhost:8081/content/like',
+            page: 1,
+            total: 0,
+        }
+    },
+    created () {
+        this.getList();
+    },
+    methods:{
+        getList (page=1,filters={type:'',value: ''}) {
+            this.$http.get(this.listUrl + '?page='+ this.page +
+                '&category=' + '二手市场' + '&type=' + filters.type
+                    + '&value=' + filters.value
+            ).then(response => {
+                response.data.contents.forEach((content) => {
+                    content.addTime = this.formatDate(content.addTime);
+                });
+                this.total = response.data.count;
+                this.data = response.data.contents;
+                console.log(this.data);
+            }, response => {
+                console.log('error:' + response);
+            })
+        },
+        handleCurrentChange(val) {
+            this.page = val;
+            this.getList();
+        },
+    },
+    components: {
+    	Search
     }
-  },
-  components: {
-  	Search
-  }
 }
 </script>
 
@@ -51,6 +67,7 @@ export default {
 		/*margin: 40px 60px;*/
 	/*}*/
 	.sale-block{
+        vertical-align: top;
 		display: inline-block;
 		width: 180px;
 		height: 280px;
@@ -63,13 +80,17 @@ export default {
 		padding: 10px;
 	}
 	.sale-img{
-		margin: 10px auto;
 		width: 160px;
 		height: 160px;
 		background: #aaa;
 	}
 	.sale-title{
 		margin: 10px;
+        line-height: 1.2rem;
 		text-align: left;
+        -webkit-box-orient: vertical;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        overflow: hidden;
 	}
 </style>

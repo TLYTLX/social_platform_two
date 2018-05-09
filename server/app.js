@@ -14,6 +14,8 @@ var Cookies = require('cookies');
 // 创建app应用
 var app = express();
 // app.use(cors());
+app.set('view engine','ejs');
+app.use("/static",express.static(__dirname + "/public"));
 
 var User = require('./models/User.js');
 

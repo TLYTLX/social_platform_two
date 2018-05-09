@@ -1,7 +1,7 @@
 <template>
 	<el-form label-width="120px" :model="form" class="form">
         <el-form-item label="头像：">
-            <upload-picture></upload-picture>
+            <upload-picture @getUrl="getUrl"></upload-picture>
         </el-form-item>
         <el-form-item label="性别：">
             <el-radio-group v-model="form.sex">
@@ -37,7 +37,7 @@ export default {
     data() {
         return {
             form: {
-                avatar: 'https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=1653084888,1892441245&fm=27&gp=0.jpg',
+                avatar: '',
                 year: '',
                 sex: '',
                 college: '',
@@ -48,6 +48,9 @@ export default {
           };
     },
     methods: {
+        getUrl(data){
+            this.form.avatar = data;
+        },
         handleSubmit() {
             this.$http.post('http://localhost:8081/my/modify/info',{
                 id: this.info._id,

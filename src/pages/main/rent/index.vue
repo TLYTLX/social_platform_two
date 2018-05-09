@@ -1,49 +1,44 @@
 <template>
 	<div style="width:100%">
         <Search type="rent"></Search>
-        <grid :table="table"></grid>
+        <grid :tableData="tableData" @getList="getList" :total="total"></grid>
     </div>
 </template>
 <script>
-import Search from '../../../components/search.vue';
-import Grid from '../../../components/grid.vue';
+import Search from './search.vue';
+import Grid from './grid.vue';
 export default {
-  data() {
-    return {
-    	table:[
-    	{
-    		title:'dsfsdfsd发电方式考了多少分了尽快反馈附件两份的数据库',
-    		announcer:'大多都是',
-    		createDate:'2018-04-23',
-    		lastDate:'2018-04-29'
-    	},{
-    		title:'dsfsdfsd发电方式考了多少分了尽快反馈附件两份的数据库',
-    		announcer:'大多都是',
-    		createDate:'2018-04-23',
-    		lastDate:'2018-04-29'
-    	},{
-    		title:'dsfsdfsd发电方式考了多少分了尽快反馈附件两份的数据库',
-    		announcer:'大多都是',
-    		createDate:'2018-04-23',
-    		lastDate:'2018-04-29'
-    	},{
-    		title:'dsfsdfsd发电方式考了多少分了尽快反馈附件两份的数据库',
-    		announcer:'大多都是',
-    		createDate:'2018-04-23',
-    		lastDate:'2018-04-29'
-    	},{
-    		title:'dsfsdfsd发电方式考了多少分了尽快反馈附件两份的数据库',
-    		announcer:'大多都是',
-    		createDate:'2018-04-23',
-    		lastDate:'2018-04-29'
-    	},
-    	]
+    data() {
+        return {
+        	tableData:[],
+            listUrl: 'http://localhost:8081/content',
+            total: 0
+        }
+    },
+    mounted () {
+        this.getList();
+    },
+    methods: {
+        getList(page=1, filters={type:'',value: ''}) {
+            this.$http.get(this.listUrl + '?page='+ page +
+                '&category=' + '合租' + '&type=' + filters.type
+                + '&value=' + filters.value
+            ).then(response => {
+                console.log(response);
+                response.data.contents.forEach((content) => {
+                    content.addTime = this.formatDate(content.addTime);
+                });
+                this.total = response.data.count;
+                this.tableData = response.data.contents;
+            }, response => {
+                console.log('error:' + response);
+            })
+        }
+    },
+    components: {
+    	Search,
+        Grid
     }
-  },
-  components: {
-  	Search,
-    Grid
-  }
 }
 </script>
 

@@ -90,6 +90,11 @@ module.exports = new mongoose.Schema({
     meetTime: {
         type: Date
     },
+    //图片
+    image: {
+        type: String,
+        default: ''
+    },
     // 匿名
     alias: {
         type: String,

@@ -28,6 +28,7 @@
                     <div class="info">{{user.college}}学院  {{user.year}}年级</div>
                 </div>
                 <div class="post-right">
+                    <img :src="post.image" v-if="post.image != ''">
                     <div class="post-content">{{post.content}}</div>
                 </div>
             </div>
