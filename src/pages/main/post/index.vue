@@ -75,7 +75,7 @@
             </div>
             <div class="page">
                 <el-button>
-                    <router-link to="/profess">
+                    <router-link :to=path>
                         返回本版
                     </router-link>
                 </el-button>
