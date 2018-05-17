@@ -1,6 +1,6 @@
 <template>
     <div id="filter">
-        <el-form :inline="true" :model="filters" class="search">
+        <el-form :inline="true" :model="filters">
             <el-form-item>
                 <el-input v-model="filters.value" style="width:250px;"
                           placeholder="请输入内容"

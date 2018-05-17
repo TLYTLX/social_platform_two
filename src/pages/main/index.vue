@@ -26,7 +26,7 @@
                           {{ username }}<i class="el-icon-arrow-down el-icon--right"></i>
                         </span>
                         <el-dropdown-menu slot="dropdown">
-                            <el-dropdown-item v-if="identity !== 'user'">
+                            <el-dropdown-item>
                                 <router-link to="/personal">个人中心</router-link>
                             </el-dropdown-item>
                             <el-dropdown-item v-if="identity !== 'user'">
