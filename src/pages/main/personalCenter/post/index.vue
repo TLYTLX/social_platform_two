@@ -54,6 +54,7 @@
 </template>
 <script>
 export default {
+    props:['user'],
     data() {
         return {
             post: [],
@@ -73,9 +74,7 @@ export default {
             this.getPost(page);
         },
         getPost (page) {
-            let obj = JSON.parse(document.cookie.substring(9));
-            let id = obj._id;
-            this.$http.get(this.getListUrl + id + '&page=' + page).then(response => {
+            this.$http.get(this.getListUrl + this.user._id + '&page=' + page).then(response => {
                 //console.log(response);
                 response.data.contents.forEach((content) => {
                     content.addTime = this.formatDate(content.addTime);

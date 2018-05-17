@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div id="main">
+        <div id="main-post">
             <div class="page">
                 <el-button>
                     <router-link :to=path>
@@ -16,8 +16,13 @@
             <div class="singlepost">
                 <div class="post-left">
                     <div class="poster">贴主</div>
-                    <router-link to="/profile"><div class="avatar"></div></router-link>
-                    <router-link to="/profile" style="text-decoration: none;">
+                    <router-link 
+                    :to="{path:'/profile', query: {name: user.username}}">
+                        <img class="avatar" :src="user.avatar">
+                    </router-link>
+                    <router-link 
+                    :to="{path:'/profile', query: {name: user.username}}" 
+                    style="text-decoration: none;">
                         <div class="username">{{user.username}}</div>
                     </router-link>
                     <div class="info">{{user.college}}学院  {{user.year}}年级</div>
@@ -29,8 +34,13 @@
 
             <div class="singlepost" v-for="(i,index) in post.comments">
                 <div class="post-left">
-                    <router-link to="/profile"><div class="avatar"></div></router-link>
-                    <router-link to="/profile" style="text-decoration: none;">
+                    <router-link 
+                    :to="{path:'/profile', query: {name: i.user.name}}">
+                        <img class="avatar" :src="i.user.avatar">
+                    </router-link>
+                    <router-link 
+                    :to="{path:'/profile', query: {name: i.user.name}}" 
+                    style="text-decoration: none;">
                         <div class="username">{{i.user.name}}</div>
                     </router-link>
                     <div class="info">{{i.user.college}}  {{i.user.year}}级</div>
@@ -39,11 +49,18 @@
                     <div style="color:#bfbfbf">{{index+1}}楼</div>
                     <div class="post-content">{{i.content}}</div>
                     <div class="post-reply" v-if="i.reply.length" v-for="j in i.reply">
-                        <a href >{{j.username}}</a>
-                        <span v-if="j.replyUser">回复<a href>{{j.replyUser}}</a></span>
+                        <router-link 
+                        :to="{path:'/profile', query: {name: j.username}}">
+                            {{j.username}}
+                        </router-link>
+                        <span v-if="j.replyUser" style="color:#aaa">回复</span>
+                        <router-link v-if="j.replyUser"
+                        :to="{path:'/profile', query: {name: j.replyUser}}">
+                            {{j.replyUser}}
+                        </router-link>
                         ：{{j.content}}
-                        <div>{{j.content}}
-                            <span v-if="reply2!=i" @click="reply2=i">回复</span>
+                        <div>{{j.postTime}}
+                            <span v-if="reply2!=j" @click="reply2=j" class="reply-txt">回复</span>
                             <div style="text-align: right" v-else>
                                 <el-input
                                     type="textarea"
@@ -173,6 +190,9 @@
                     }
                     this.post.comments.forEach((comment) => {
                         comment.postTime = this.formatDate(comment.postTime);
+                        comment.reply.forEach((reply) => {
+                            reply.postTime = this.formatDate(comment.postTime);
+                        })
                     });
                 }, response => {
                     console.log('error:' + response);
@@ -241,12 +261,12 @@
         background: #f7f9fb;
         margin:0;
     }
-    /*#main{*/
-        /*margin: 40px auto;*/
-        /*width: 80%;*/
-        /*border-top: 3px solid #6ba484;*/
-        /*background: #fff;*/
-    /*}*/
+    #main-post{
+        margin: 40px auto;
+        width: 80%;
+        border-top: 3px solid #6ba484;
+        background: #fff;
+    }
     .page{
         padding: 20px;
         border-bottom: 1.5px solid #e6e7ea;
@@ -270,7 +290,7 @@
     .submit{
         width: 120px;
         margin: 20px 0;
-        color: #fff;
+        color: #fff!important;
     }
     .username{
         font-size: 20px;
@@ -302,6 +322,7 @@
         border-bottom: 3px solid #7DBDB5;
     }
     .post-content{
+        margin-top:20px;
         min-height: 250px;
     }
     .post-reply{
@@ -314,9 +335,9 @@
         text-align: right;
         color: #C0C4CC;
     }
-    .post-reply span{
+    .reply-txt{
         color: #aaa;
-        margin-left: 10px;
+        margin: 0 10px;
         cursor: pointer;
     }
     .post-option{

@@ -35,10 +35,33 @@ router.get('/', function (req, res, next) {
 /*获取个人信息*/
 router.get('/my/info', function (req, res, next) {
     var id = req.query.id;
-    User.find( { username: id} ).then(function (users) {
+    User.findOne( { _id: id} ).then(function (user) {
         res.json({
-            userInfo: users[0]
+            userInfo: user
         });
+    });
+})
+
+/*获取他人信息*/
+var userinfo = {};
+router.get('/information', function (req, res, next) {
+    var name = req.query.name;
+    User.findOne( { username: name} ).then(function (user) {
+        console.log(user);
+        userinfo._id = user._id;
+        userinfo.username = user.username;
+        userinfo.year = user.year;
+        userinfo.college = user.college;
+        userinfo.introduce = user.introduce;
+        userinfo.sex = user.sex;
+        userinfo.avatar = user.avatar;
+        userinfo.registerDate = user.registerDate;
+        return Content.find({user: userinfo._id}).count().then(function (count) {
+            userinfo.count = count;
+            res.json({
+                userInfo: userinfo
+            });
+        })
     });
 })
 
@@ -153,6 +176,91 @@ router.post('/my/contents/modify/status', function (req, res, next) {
     }, function () {
         responseData.code = 1;
         responseData.message = '帖子修改失败';
+        res.json(responseData);
+    })
+})
+
+/*获取个人消息列表*/
+var myMessage = {};
+router.get('/my/message', function (req, res, next) {
+    myMessage.id = req.query.id;
+    myMessage.user = req.query.user;
+    myMessage.count = 0;
+    myMessage.page = Number(req.query.page || 1);
+    myMessage.limit = 5;
+    myMessage.pages = 0;
+    myMessage.contents = [];
+    var list = [];
+    Content.find({$or:[{user: myMessage.id},
+        {"comments.user.name": myMessage.user},
+        {"comments.reply.replyUser": myMessage.user}] }
+    ).then(function (contents) {
+        for(let i = 0;i < contents.length;i++) {
+            for(let j = 0;j < contents[i].comments.length;j++) {
+                if(contents[i].user == myMessage.id && 
+                    contents[i].readTime < contents[i].comments[j].postTime) {
+                    let obj = {};
+                    obj.title = contents[i].title;
+                    obj.id = contents[i]._id;
+                    obj.category = contents[i].category;
+                    obj.content = contents[i].comments[j].content;
+                    obj.postTime = contents[i].comments[j].postTime;
+                    obj.user = contents[i].comments[j].user.name;
+                    obj.type = 1;
+                    list.push(obj);
+                } else {
+                    for(let k = 0;k < contents[i].comments[j].reply.length;k++) {
+                        if(contents[i].comments[j].user.name == myMessage.user &&
+                            contents[i].readTime < contents[i].comments[j].reply[k].postTime) {
+                            let obj = {};
+                            obj.title = contents[i].title;
+                            obj.id = contents[i]._id;
+                            obj.category = contents[i].category;
+                            obj.content = contents[i].comments[j].reply[k].content;
+                            obj.postTime = contents[i].comments[j].reply[k].postTime;
+                            obj.user = contents[i].comments[j].reply[k].username;
+                            obj.type = 2;
+                            list.push(obj);
+                        } else if(contents[i].comments[j].reply[k].replyUser == myMessage.user &&
+                            contents[i].readTime < contents[i].comments[j].reply[k].postTime) {
+                            let obj = {};
+                            obj.title = contents[i].title;
+                            obj.id = contents[i]._id;
+                            obj.category = contents[i].category;
+                            obj.content = contents[i].comments[j].reply[k].content;
+                            obj.postTime = contents[i].comments[j].reply[k].postTime;
+                            obj.user = contents[i].comments[j].reply[k].username;
+                            obj.type = 3;
+                            list.push(obj);
+                        }
+                    }
+                }
+            }
+        }
+        list.sort(function(a,b){
+            return b.postTime - a.postTime;
+        })
+        myMessage.count = list.length;
+        myMessage.contents = list.slice((myMessage.page-1)*myMessage.limit,myMessage.page*myMessage.limit);
+        res.json(myMessage);
+    })
+})
+
+/*修改文章已读事件*/
+router.post('/my/contents/modify/readTime', function (req, res, next) {
+    var id = req.body.id;
+    var time = req.body.time;
+    Content.update({
+        _id: id
+    },{
+        readTime: time
+    }).then(function () {
+        responseData.code = 0;
+        responseData.message = '评论状态变为已读';
+        res.json(responseData);
+    }, function () {
+        responseData.code = 1;
+        responseData.message = '评论状态修改失败';
         res.json(responseData);
     })
 })
@@ -314,9 +422,9 @@ router.post('/like', function (req, res, next) {
  * */
 router.post('/content_comment/post', function (req, res, next) {
     // 文章ID
+    console.log(req);
     var contentId = req.body.contentid || '';
     var postData = {};
-
     Content.findOne({
         _id: contentId,
     }).then(function (content) {
@@ -327,7 +435,7 @@ router.post('/content_comment/post', function (req, res, next) {
                     name: '匿名用户',
                     college:'匿名',
                     sex:'匿名',
-                    year:'匿名'
+                    year:'匿名',
                 },
                 postTime: new Date(),
                 content: req.body.content,
@@ -341,13 +449,14 @@ router.post('/content_comment/post', function (req, res, next) {
                         name: req.userInfo.username,
                         college:user.college,
                         sex:user.sex,
-                        year:user.year
+                        year:user.year,
+                        avatar:user.avatar
                     },
                     postTime: new Date(),
                     content: req.body.content,
                     reply: []
                 };
-            });
+            })
         }
     })
 
@@ -361,7 +470,7 @@ router.post('/content_comment/post', function (req, res, next) {
         responseData.message = '评论成功';
         responseData.data = newContent;
         res.json(responseData);
-    })
+    },function(err){console.log(err)})
 })
 /*
  * 提交回复评论

@@ -52,6 +52,11 @@ module.exports = new mongoose.Schema({
         type: Date,
         default: new Date(),
     },
+    //判断消息是否已读
+    readTime: {
+        type: Date,
+        default: new Date(),
+    },
     views: {
         type: Number,
         default: 0,
@@ -85,10 +90,11 @@ module.exports = new mongoose.Schema({
     meetTime: {
         type: Date
     },
-
     // 匿名
     alias: {
         type: String,
         default: ''
-    }
+    },
+}, {
+usePushEach: true
 });
