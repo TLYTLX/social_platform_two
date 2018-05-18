@@ -16,12 +16,12 @@
             <div class="singlepost">
                 <div class="post-left">
                     <div class="poster">贴主</div>
-                    <router-link 
+                    <router-link
                     :to="{path:'/profile', query: {name: user.username}}">
                         <img class="avatar" :src="user.avatar">
                     </router-link>
-                    <router-link 
-                    :to="{path:'/profile', query: {name: user.username}}" 
+                    <router-link
+                    :to="{path:'/profile', query: {name: user.username}}"
                     style="text-decoration: none;">
                         <div class="username">{{user.username}}</div>
                     </router-link>
@@ -34,12 +34,12 @@
 
             <div class="singlepost" v-for="(i,index) in post.comments">
                 <div class="post-left">
-                    <router-link 
+                    <router-link
                     :to="{path:'/profile', query: {name: i.user.name}}">
                         <img class="avatar" :src="i.user.avatar">
                     </router-link>
-                    <router-link 
-                    :to="{path:'/profile', query: {name: i.user.name}}" 
+                    <router-link
+                    :to="{path:'/profile', query: {name: i.user.name}}"
                     style="text-decoration: none;">
                         <div class="username">{{i.user.name}}</div>
                     </router-link>
@@ -49,7 +49,7 @@
                     <div style="color:#bfbfbf">{{index+1}}楼</div>
                     <div class="post-content">{{i.content}}</div>
                     <div class="post-reply" v-if="i.reply.length" v-for="j in i.reply">
-                        <router-link 
+                        <router-link
                         :to="{path:'/profile', query: {name: j.username}}">
                             {{j.username}}
                         </router-link>
@@ -262,8 +262,8 @@
         margin:0;
     }
     #main-post{
-        margin: 40px auto;
-        width: 80%;
+        /*margin: 40px auto;*/
+        /*width: 80%;*/
         border-top: 3px solid #6ba484;
         background: #fff;
     }
