@@ -92,8 +92,11 @@
                 },
                 add: false,
                 filters: {
-                    type: 'title',
-                    value: ''
+                    type: '',
+                    value: '',
+                    money:'',
+                    sex:'',
+                    area:''
                 },
                 formData: {
                     title: '',
@@ -105,6 +108,18 @@
                 addFormRules: {
                     title: [
                         { required: true, message: '请输入标题', trigger: 'blur' }
+                    ],
+                    type: [
+                        { required: true, message: '请选择类型', trigger: 'blur' }
+                    ],
+                    area: [
+                        { required: true, message: '请选择地区', trigger: 'blur' }
+                    ],
+                    sex: [
+                        { required: true, message: '请选择性别', trigger: 'blur' }
+                    ],
+                    money: [
+                        { required: true, message: '请选择价位', trigger: 'blur' }
                     ],
                     content: [
                         { required: true, message: '请输入描述', trigger: 'blur' }
@@ -167,6 +182,10 @@
             margin: 0 auto;
             .row
                 margin: 20px 0;
+            .column
+                margin-left:14px;
+                margin-bottom:0;
+                display:inline-block;
     .short
         width: 120px!important;
 </style>

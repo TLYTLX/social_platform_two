@@ -81,6 +81,16 @@ module.exports = new mongoose.Schema({
         type: String,
         default: ''
     },
+    //租金范围
+    money:{
+        type:String,
+        default: ''
+    },
+    //性别
+    sex:{
+        type:String,
+        default:''
+    },
     // 相约类型
     type: {
         type: String,
@@ -89,6 +99,11 @@ module.exports = new mongoose.Schema({
     //相约时间
     meetTime: {
         type: Date
+    },
+    //图片
+    image: {
+        type: String,
+        default: ''
     },
     // 匿名
     alias: {

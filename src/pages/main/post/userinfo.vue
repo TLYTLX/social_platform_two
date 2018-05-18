@@ -71,6 +71,7 @@ export default {
 	.info{
 		display: inline-block;
 		vertical-align: middle;
+		text-align: left;
 	}
 	.username{
 		font-size: 20px;

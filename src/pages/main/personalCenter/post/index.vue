@@ -17,17 +17,17 @@
             <el-table-column
                 prop="views"
                 label="浏览量"
-                width="80">
+                width="78">
             </el-table-column>
             <el-table-column
                 prop="like"
                 label="点赞数"
-                width="80">
+                width="78">
             </el-table-column>
             <el-table-column
                 prop="isActive"
                 label="状态"
-                width="80">
+                width="70">
             </el-table-column>
             <el-table-column
                 prop="option"
@@ -40,7 +40,7 @@
                 </template>
             </el-table-column>
         </el-table>
-        <div class="my-page">
+        <div class="my-page" v-if="total>10">
             <el-pagination
                 @current-change="handleCurrentChange"
                 :page-size="10"

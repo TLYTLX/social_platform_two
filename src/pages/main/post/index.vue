@@ -11,6 +11,10 @@
 
             <div class="post-title">
                 【{{post.category}}】{{post.title}}
+                <span v-if="post.type" class="post-type">
+                    <i class="el-icon-goods"></i>
+                    {{post.type}}
+                </span>
             </div>
 
             <div class="singlepost">
@@ -28,7 +32,17 @@
                     <div class="info">{{user.college}}学院  {{user.year}}年级</div>
                 </div>
                 <div class="post-right">
+                    <img :src="post.image" v-if="post.image != ''">
                     <div class="post-content">{{post.content}}</div>
+                    <div class="post-mainTime">
+                        <div>
+                            赞：{{post.like}}  阅读量：{{post.views}}
+                        </div>
+                        <div>
+                            {{post.addTime}}
+                            <img src="../../../static/like.png">
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -188,10 +202,11 @@
                     } else {
                         this.user = response.data.content.user;
                     }
+                    this.post.addTime = this.formatDate(this.post.addTime);
                     this.post.comments.forEach((comment) => {
                         comment.postTime = this.formatDate(comment.postTime);
                         comment.reply.forEach((reply) => {
-                            reply.postTime = this.formatDate(comment.postTime);
+                            reply.postTime = this.formatDate(reply.postTime);
                         })
                     });
                 }, response => {
@@ -280,6 +295,11 @@
         line-height: 70px;
         border-bottom: 1.5px solid #e6e7ea;
     }
+    .post-type{
+        font-size: 14px;
+        font-weight: normal;
+        color: #6ba484;
+    }
     .avatar {
         width: 120px;
         height: 120px;
@@ -347,6 +367,19 @@
         justify-content: space-between;
         color: #C0C4CC;
     }
+    .post-mainTime{
+        display: flex;
+        justify-content: space-between;
+        color: #C0C4CC;
+        align-items: center;
+    }
+    .post-mainTime img{
+        width: 25px;
+        margin-right: -30px;
+    }
+    .post-mainTime i{
+        color: #7DBDB5;
+    }
     .el-icon-edit-outline {
         font-size: 24px;
         margin-right: 5px;
@@ -367,7 +400,7 @@
         position: relative;
     }
     .post-right{
-        padding: 40px;
+        padding: 40px 40px 20px;
         flex: 1;
         border-left: 1.5px solid #e6e7ea;
     }

@@ -6,6 +6,13 @@ var express = require('express');
 
 var router = express.Router();
 
+var http = require("http"); 
+
+formidable = require('formidable'),
+fs = require('fs'),
+AVATAR_UPLOAD_FOLDER = '/avatar/';
+SALE_UPLOAD_FOLDER = '/sale/';
+
 var Content = require('../models/Content');
 
 var User = require('../models/User');
@@ -191,14 +198,15 @@ router.get('/my/message', function (req, res, next) {
     myMessage.pages = 0;
     myMessage.contents = [];
     var list = [];
-    Content.find({$or:[{user: myMessage.id},
+    Content.find({$or:[{user: myMessage.id,"comments.0": { "$exists" : 1 }},
         {"comments.user.name": myMessage.user},
         {"comments.reply.replyUser": myMessage.user}] }
     ).then(function (contents) {
         for(let i = 0;i < contents.length;i++) {
             for(let j = 0;j < contents[i].comments.length;j++) {
-                if(contents[i].user == myMessage.id && 
-                    contents[i].readTime < contents[i].comments[j].postTime) {
+                if(contents[i].user == myMessage.id &&
+                    contents[i].readTime < contents[i].comments[j].postTime
+                    ) {
                     let obj = {};
                     obj.title = contents[i].title;
                     obj.id = contents[i]._id;
@@ -208,7 +216,7 @@ router.get('/my/message', function (req, res, next) {
                     obj.user = contents[i].comments[j].user.name;
                     obj.type = 1;
                     list.push(obj);
-                } else {
+                } else if(contents[i].user != myMessage.id) {
                     for(let k = 0;k < contents[i].comments[j].reply.length;k++) {
                         if(contents[i].comments[j].user.name == myMessage.user &&
                             contents[i].readTime < contents[i].comments[j].reply[k].postTime) {
@@ -237,7 +245,7 @@ router.get('/my/message', function (req, res, next) {
                 }
             }
         }
-        list.sort(function(a,b){
+        if(list.length>1) list.sort(function(a,b){
             return b.postTime - a.postTime;
         })
         myMessage.count = list.length;
@@ -271,16 +279,28 @@ router.get('/content', function (req, res, next) {
     data.category = req.query.category || '';
     var type = req.query.type || '';
     var value = req.query.value.trim() || '';
+    var sex = req.query.sex || '';
+    var area = req.query.area || '';
+    var money = req.query.money || '';
     data.count = 0;
     data.page = Number(req.query.page || 1);
-    data.limit = 10;
+    if(data.category === '二手市场') data.limit = 30;
+    else data.limit = 10;
     data.pages = 0;
     var where = {};
     if (data.category) {
         where.category = data.category;
     }
-    if (type && value) {
+    if (type && value && data.category === '匿名论坛') {
         where[type] = new RegExp(value,"gi");
+    } else if (data.category === '新鲜事' || data.category === '二手市场') {
+        if(type)where.type = new RegExp(type,"gi");
+        if(value)where.title = new RegExp(value,"gi");
+    } else if (data.category === '合租') {
+        if(sex)where.sex = new RegExp(sex,"gi");
+        if(area)where.area = new RegExp(area,"gi");
+        if(money)where.title = new RegExp(money,"gi");
+        if(value)where.title = new RegExp(value,"gi");
     } else if (value) {
         where.title = new RegExp(value,"gi");
     }
@@ -304,6 +324,68 @@ router.get('/content', function (req, res, next) {
         res.json(data);
     })
 })
+
+router.get('/map',function(req,res,next){
+    http.request('http://map.baidu.com/subways/index.html?c=beijing&ccode=131&qq-pf-to=pcqq.group',function(res){
+        console.log(res);
+    })
+
+})
+
+router.post('/upload', function(req, res) {
+
+  var form = new formidable.IncomingForm();   //创建上传表单
+  form.encoding = 'utf-8';        //设置编辑
+  form.uploadDir = 'public' + AVATAR_UPLOAD_FOLDER;     //设置上传目录
+  form.keepExtensions = true;     //保留后缀
+  form.maxFieldsSize = 2 * 1024 * 1024;   //文件大小
+
+  form.parse(req, function(err, fields, files) {
+
+    if (err) {
+      res.locals.error = err;
+      //res.render('index', { title: TITLE });
+      return;
+    }
+    //console.log('11111111',files);
+
+    var extName = '';  //后缀名
+    switch (files.type) {
+      case 'image/pjpeg':
+        extName = 'jpg';
+        break;
+      case 'image/jpeg':
+        extName = 'jpg';
+        break;
+      case 'image/png':
+        extName = 'png';
+        break;
+      case 'image/x-png':
+        extName = 'png';
+        break;
+    }
+
+    /*if(extName.length == 0){
+      res.locals.error = '只支持png和jpg格式图片';
+      //res.render('index', { title: TITLE });
+      console.log(extName)
+      return;
+    }*/
+
+    var avatarName = Math.random() + '.' + extName;
+    //图片写入地址；
+    var newPath = form.uploadDir + avatarName;
+    //显示地址；
+    //var showUrl = domain + AVATAR_UPLOAD_FOLDER + avatarName;
+    //console.log("newPath",newPath);
+    //fs.renameSync(files.path, newPath);  //重命名
+    responseData.code = 0;
+    responseData.data = files;
+    responseData.message = '上传成功';
+    //responseData.path = files.path;
+    res.json(responseData);
+  });
+});
 
 /*获取热赞帖子列表*/
 var likedata = {};
@@ -344,9 +426,12 @@ router.post('/content/add', function (req, res, next) {
         user: req.userInfo._id,
         addTime: new Date(),
         area: req.body.area || '',
+        image: req.body.image || '',
         meetTime: req.body.meetTime,
         type: req.body.type || '',
-        alias: req.body.alias || ''
+        alias: req.body.alias || '',
+        sex: req.body.sex || '',
+        money: req.body.money || ''
     }).save().then(function () {
         responseData.code = 0;
         responseData.message = '保存帖子成功';
