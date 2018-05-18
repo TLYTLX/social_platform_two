@@ -1,6 +1,6 @@
 <template>
 	<div style="width:100%">
-        <Search type="rent"></Search>
+        <Search @getList="getList"></Search>
         <grid :tableData="tableData" @getList="getList" :total="total"></grid>
     </div>
 </template>
@@ -19,10 +19,11 @@ export default {
         this.getList();
     },
     methods: {
-        getList(page=1, filters={type:'',value: ''}) {
+        getList(page=1, filters={money:'',sex:'',area:'',value: ''}) {
             this.$http.get(this.listUrl + '?page='+ page +
-                '&category=' + '合租' + '&type=' + filters.type
-                + '&value=' + filters.value
+                '&category=' + '合租' + '&area=' + filters.area
+                + '&value=' + filters.value + '&money='+filters.money
+                + '&sex=' + filters.sex
             ).then(response => {
                 response.data.contents.forEach((content) => {
                     content.addTime = this.formatDate(content.addTime);
