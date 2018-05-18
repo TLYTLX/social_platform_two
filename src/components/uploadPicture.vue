@@ -12,6 +12,7 @@
 
 <script>
 export default {
+    props:['image'],
     data() {
         return {
             option: [],
@@ -22,7 +23,7 @@ export default {
         handleAvatarSuccess(res, file) {
             var path = res.data.file.path.substring(14);
             var url = 'http://localhost:8081/static/avatar/'+path;
-            this.imageUrl = URL.createObjectURL(file.raw);
+            this.imageUrl = url;
             this.$emit('getUrl',url);
         },
         beforeAvatarUpload(file) {

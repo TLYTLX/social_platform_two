@@ -37,7 +37,7 @@
                 </el-select>
             </el-form-item>
             <el-form-item class="row" label="图片">
-                <upload-picture @getUrl="getUrl"></upload-picture>
+                <upload-picture @getUrl="getUrl" :image="formData.image"></upload-picture>
             </el-form-item>
             <el-form-item class="row" label="描述" prop="content">
                 <el-input v-model="formData.content"
@@ -97,6 +97,7 @@
                                     content: ''
                                 };
                                 this.$emit('getList');
+                                window.location.reload();
                             } else {
                                 this.$message({
                                     message: response.data.message,

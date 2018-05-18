@@ -4,32 +4,32 @@
             <el-table-column
                 prop="title"
                 label="标题"
-                width="250">
+                width="240">
             </el-table-column>
             <el-table-column
                 prop="category"
                 label="所属模块"
-                width="120">
+                width="100">
             </el-table-column>
             <el-table-column
                 prop="addTime"
                 label="发布时间"
-                width="195">
+                width="175">
             </el-table-column>
             <el-table-column
                 prop="views"
                 label="浏览量"
-                width="80">
+                width="78">
             </el-table-column>
             <el-table-column
                 prop="like"
                 label="点赞数"
-                width="80">
+                width="78">
             </el-table-column>
             <el-table-column
                 prop="isActive"
                 label="状态"
-                width="80">
+                width="70">
             </el-table-column>
             <el-table-column
                 prop="option"
@@ -42,7 +42,7 @@
                 </template>
             </el-table-column>
         </el-table>
-        <div class="my-page">
+        <div class="my-page" v-if="total>10">
             <el-pagination
                 @current-change="handleCurrentChange" 
                 :page-size="10" 

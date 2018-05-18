@@ -7,7 +7,7 @@
             </el-table-column>
             <el-table-column
                 label="标题"
-                width="300">
+                width="350">
                 <template scope="scope">
                     <router-link :to="{path:'/post', query: {id: scope.row._id}}" class="router-link">
                         {{ scope.row.title }}
@@ -36,17 +36,9 @@
                 prop="addTime"
                 label="发布时间">
             </el-table-column>
-            <el-table-column
-                prop="views"
-                label="阅读量">
-            </el-table-column>
-            <el-table-column
-                prop="like"
-                label="点赞数">
-            </el-table-column>
         </el-table>
         <!--工具条-->
-        <el-col :span="24" class="toolbar">
+        <el-col :span="24" v-if="total>10">
             <el-pagination layout="prev, pager, next"
                            @current-change="handleCurrentChange"
                            :page-size="10"

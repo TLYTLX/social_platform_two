@@ -278,6 +278,9 @@ router.get('/content', function (req, res, next) {
     data.category = req.query.category || '';
     var type = req.query.type || '';
     var value = req.query.value.trim() || '';
+    var sex = req.query.sex || '';
+    var area = req.query.area || '';
+    var money = req.query.money || '';
     data.count = 0;
     data.page = Number(req.query.page || 1);
     if(data.category === '二手市场') data.limit = 30;

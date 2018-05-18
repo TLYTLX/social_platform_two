@@ -54,7 +54,7 @@
                 <el-select v-model="formData.money" placeholder="请选择" class="short">
                     <el-option
                         v-for="i in money"
-                        :label="i">
+                        :value="i">
                     </el-option>
                 </el-select>
             </el-form-item>
@@ -121,6 +121,7 @@
                                     content: ''
                                 };
                                 this.$emit('getList');
+                                window.location.reload();
                             } else {
                                 this.$message({
                                     message: response.data.message,
