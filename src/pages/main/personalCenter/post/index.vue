@@ -3,18 +3,16 @@
         <el-table :data="post" class="mypost">
             <el-table-column
                 prop="title"
-                label="标题"
-                width="240">
+                label="标题">
             </el-table-column>
             <el-table-column
                 prop="category"
-                label="所属模块"
-                width="100">
+                label="所属模块">
             </el-table-column>
             <el-table-column
                 prop="addTime"
                 label="发布时间"
-                width="175">
+                width="200">
             </el-table-column>
             <el-table-column
                 prop="views"
@@ -44,8 +42,8 @@
         </el-table>
         <div class="my-page" v-if="total>10">
             <el-pagination
-                @current-change="handleCurrentChange" 
-                :page-size="10" 
+                @current-change="handleCurrentChange"
+                :page-size="10"
                 layout="prev, pager, next"
                 :total="total">
             </el-pagination>
@@ -151,7 +149,6 @@ export default {
 <style>
     .mypost{
         margin:20px auto;
-        width: 957px;
     }
     .my-page{
         text-align: right;
