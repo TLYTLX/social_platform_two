@@ -198,14 +198,15 @@ router.get('/my/message', function (req, res, next) {
     myMessage.pages = 0;
     myMessage.contents = [];
     var list = [];
-    Content.find({$or:[{user: myMessage.id},
+    Content.find({$or:[{user: myMessage.id,"comments.0": { "$exists" : 1 }},
         {"comments.user.name": myMessage.user},
         {"comments.reply.replyUser": myMessage.user}] }
     ).then(function (contents) {
         for(let i = 0;i < contents.length;i++) {
             for(let j = 0;j < contents[i].comments.length;j++) {
-                if(contents[i].user == myMessage.id && 
-                    contents[i].readTime < contents[i].comments[j].postTime) {
+                if(contents[i].user == myMessage.id &&
+                    contents[i].readTime < contents[i].comments[j].postTime
+                    ) {
                     let obj = {};
                     obj.title = contents[i].title;
                     obj.id = contents[i]._id;
@@ -215,7 +216,7 @@ router.get('/my/message', function (req, res, next) {
                     obj.user = contents[i].comments[j].user.name;
                     obj.type = 1;
                     list.push(obj);
-                } else {
+                } else if(contents[i].user != myMessage.id) {
                     for(let k = 0;k < contents[i].comments[j].reply.length;k++) {
                         if(contents[i].comments[j].user.name == myMessage.user &&
                             contents[i].readTime < contents[i].comments[j].reply[k].postTime) {
@@ -244,7 +245,7 @@ router.get('/my/message', function (req, res, next) {
                 }
             }
         }
-        list.sort(function(a,b){
+        if(list.length>1) list.sort(function(a,b){
             return b.postTime - a.postTime;
         })
         myMessage.count = list.length;
