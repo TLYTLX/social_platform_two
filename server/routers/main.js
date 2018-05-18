@@ -17,6 +17,10 @@ var Content = require('../models/Content');
 
 var User = require('../models/User');
 
+//加密
+var crypto = require('crypto');
+var md5 = crypto.createHash('md5');
+
 // 统一返回格式
 var responseData;
 router.use(function (req, res, next) {
@@ -102,9 +106,13 @@ router.post('/my/modify/password', function (req, res, next) {
     var password = req.body.pass;
     var newPass = req.body.newPass;
     // 查询数据库中用户名和密码是否存在且对应, 如是, 则可以进行修改
+    //旧密码加密
+    var content = 'slcks' + password + 'dref';
+    var sign = crypto.createHash('md5').update(content).digest('hex');
+
     User.findOne({
         _id: id,
-        password: password,
+        password: sign,
     }).then(function (userInfo) {
         if (!userInfo) {
             responseData.code = 2;
@@ -112,10 +120,13 @@ router.post('/my/modify/password', function (req, res, next) {
             res.json(responseData);
             return;
         } else {
+            //新密码加密
+            var content2 = 'slcks' + newPass + 'dref';
+            var sign2 = crypto.createHash('md5').update(content2).digest('hex');
             User.update({
             _id: id,
         },{
-            password: newPass
+            password: sign2
         }).then(function () {
             responseData.code = 0;
             responseData.message = '修改密码成功';

@@ -40,7 +40,7 @@
                         </div>
                         <div>
                             {{post.addTime}}
-                            <img src="../../../static/like.png">
+                            <img src="../../../static/like.png" @click="addLike">
                         </div>
                     </div>
                 </div>
@@ -214,6 +214,25 @@
                 })
             },
 
+            addLike () {
+                this.$http.post('http://localhost:8081/like?contentid='+this.$route.query['id']).then(response => {
+                    if (response.data.code !== 0) {
+                        this.$message({
+                            message: response.data.message,
+                            type: 'error'
+                        });
+                    } else {
+                        this.$message({
+                            message: response.data.message,
+                            type: 'success'
+                        });
+                        this.post.like = this.post.like + 1;
+                    }
+                }, response => {
+                    console.log('error:' + response);
+                })
+            },
+
             handleCurrentChange(val) {
                 this.page = val;
                 this.getView();
@@ -374,6 +393,7 @@
         align-items: center;
     }
     .post-mainTime img{
+        cursor: pointer;
         width: 25px;
         margin-right: -30px;
     }
