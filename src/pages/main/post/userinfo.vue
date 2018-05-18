@@ -36,7 +36,6 @@ export default {
    		    this.$http.get('http://localhost:8081/information/?name=' + this.$route.query['name']).then(response => {
    		    	this.user = response.data.userInfo;
    		    	this.user.registerDate = this.formatDate(this.user.registerDate);
-                console.log(response);
             }, response => {
                 console.log('error:' + response);
             })
