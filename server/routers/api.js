@@ -7,6 +7,10 @@ var router = express.Router();
 var User = require('../models/User');
 var Content = require('../models/Content');
 
+//加密
+var crypto = require('crypto');
+var md5 = crypto.createHash('md5');
+
 // 统一返回格式
 var responseData;
 router.use(function (req, res, next) {
@@ -28,6 +32,12 @@ router.post('/user/register', function (req, res, next) {
     var repassword = req.body.repassword;
     var identity = req.body.identity || 'user';
     // 用户名是否已被注册: 数据库查询 Model类的静态方法
+
+    //密码加密
+    var content = 'slcks' + password + 'dref';
+    md5.update(content);
+    var sign = md5.digest('hex');
+
     User.findOne({
         username: username,
     }).then(function (userInfo) {
@@ -42,7 +52,7 @@ router.post('/user/register', function (req, res, next) {
         // 保存用户的信息到数据库中
         var user = new User({
             username: username,
-            password: password,
+            password: sign,
             identity: identity
         })
 
@@ -57,9 +67,15 @@ router.post('/user/login', function (req, res, next) {
     var username = req.body.username;
     var password = req.body.password;
     // 查询数据库中用户名和密码是否存在且对应, 如是, 则登陆成功
+
+    //密码加密
+    var content = 'slcks' + password + 'dref';
+    md5.update(content);
+    var sign = md5.digest('hex');
+
     User.findOne({
         username: username,
-        password: password,
+        password: sign,
     }).then(function (userInfo) {
         if (!userInfo) {
             responseData.code = 2;
