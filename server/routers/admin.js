@@ -7,6 +7,10 @@ var router = express.Router();
 var User = require('../models/User');
 var Content = require('../models/Content');
 
+//加密
+var crypto = require('crypto');
+var md5 = crypto.createHash('md5');
+
 
 // 统一返回格式  code=0代表成功，1代表失败
 var responseData;
@@ -162,10 +166,15 @@ router.post('/user/modify/password', function (req, res, next) {
     // 获取要修改用户的id
     var id = req.body.id;
     var password = req.body.password;
+    //密码加密
+    var content = 'slcks' + password + 'dref';
+    md5.update(content);
+    var sign = md5.digest('hex');
+    
     User.update({
         _id: id,
     },{
-        password: password
+        password: sign
     }).then(function () {
         responseData.code = 0;
         responseData.message = '修改密码成功';
