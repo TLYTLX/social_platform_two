@@ -24,7 +24,6 @@ export default {
                 '&category=' + '合租' + '&type=' + filters.type
                 + '&value=' + filters.value
             ).then(response => {
-                console.log(response);
                 response.data.contents.forEach((content) => {
                     content.addTime = this.formatDate(content.addTime);
                 });

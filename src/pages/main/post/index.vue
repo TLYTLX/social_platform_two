@@ -29,7 +29,7 @@
                     style="text-decoration: none;">
                         <div class="username">{{user.username}}</div>
                     </router-link>
-                    <div class="info">{{user.college}}学院  {{user.year}}年级</div>
+                    <div class="info">{{user.college}}学院  {{user.year}}级</div>
                 </div>
                 <div class="post-right">
                     <img :src="post.image" v-if="post.image != ''">
@@ -177,7 +177,7 @@
                         reply: [{username: '',
                             postTime: new Date(),
                             content: '',
-                            replyuser: ''
+                            replyUser: ''
                         }]
                     }]
                 }
@@ -248,7 +248,7 @@
                 }
                 this.$http.post('http://localhost:8081/content_comment/post', {
                     contentid: this.$route.query['id'],
-                    content: this.editing_comment,
+                    content: this.editing_comment
                 }).then(() => {
                     this.editing_comment = "";
                     //如果拿后台返回的数据，那么造成的后果是不会及时分页

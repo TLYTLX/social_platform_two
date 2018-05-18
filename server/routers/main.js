@@ -6,7 +6,7 @@ var express = require('express');
 
 var router = express.Router();
 
-var http = require("http"); 
+var http = require("http");
 
 formidable = require('formidable'),
 fs = require('fs'),
@@ -58,7 +58,6 @@ var userinfo = {};
 router.get('/information', function (req, res, next) {
     var name = req.query.name;
     User.findOne( { username: name} ).then(function (user) {
-        console.log(user);
         userinfo._id = user._id;
         userinfo.username = user.username;
         userinfo.year = user.year;
@@ -518,7 +517,6 @@ router.post('/like', function (req, res, next) {
  * */
 router.post('/content_comment/post', function (req, res, next) {
     // 文章ID
-    console.log(req);
     var contentId = req.body.contentid || '';
     var postData = {};
     Content.findOne({
@@ -537,6 +535,16 @@ router.post('/content_comment/post', function (req, res, next) {
                 content: req.body.content,
                 reply: []
             };
+            Content.findOne({
+                _id: contentId,
+            }).populate({path: 'user', select: 'username college sex year introduce avatar'}).then(function (content) {
+                content.comments.push(postData);
+                return content.save();
+            }).then(function (newContent) {
+                responseData.message = '评论成功';
+                responseData.data = newContent;
+                res.json(responseData);
+            },function(err){console.log(err)})
         } else {
             // 评论信息
             User.findOne ({username: req.userInfo.username}).then (function (user) {
@@ -552,21 +560,20 @@ router.post('/content_comment/post', function (req, res, next) {
                     content: req.body.content,
                     reply: []
                 };
+                Content.findOne({
+                    _id: contentId,
+                }).populate({path: 'user', select: 'username college sex year introduce avatar'}).then(function (content) {
+                    content.comments.push(postData);
+                    return content.save();
+                }).then(function (newContent) {
+                    responseData.message = '评论成功';
+                    responseData.data = newContent;
+                    res.json(responseData);
+                },function(err){console.log(err)})
             })
+
         }
     })
-
-    // 查询当前文章的信息
-    Content.findOne({
-        _id: contentId,
-    }).populate({path: 'user', select: 'username college sex year introduce avatar'}).then(function (content) {
-        content.comments.push(postData);
-        return content.save();
-    }).then(function (newContent) {
-        responseData.message = '评论成功';
-        responseData.data = newContent;
-        res.json(responseData);
-    },function(err){console.log(err)})
 })
 /*
  * 提交回复评论
@@ -598,21 +605,20 @@ router.post('/reply_comment/post', function (req, res, next) {
                 replyUser: replyUser
             };
         }
-    })
-
-    // 查询当前文章的信息
-    Content.findOne({
-        _id: contentId
-    }).populate({path: 'user', select: 'username college sex year introduce avatar'}).then(function (content) {
-        content.comments[postFloor].reply.push(replyComment);
-        //混合类型修改完必须调用markModified splice能成功是因为 mongooseArray 内在调用了this._markModified()
-        // 详细解释见：http://cnodejs.org/topic/516ab9c96d38277306376cad
-        content.comments.splice(0,0);
-        return content.save();
-    }).then(function (newContent) {
-        responseData.message = '回复成功';
-        responseData.data = newContent;
-        res.json(responseData);
+        // 查询当前文章的信息
+        Content.findOne({
+            _id: contentId
+        }).populate({path: 'user', select: 'username college sex year introduce avatar'}).then(function (content) {
+            content.comments[postFloor].reply.push(replyComment);
+            //混合类型修改完必须调用markModified splice能成功是因为 mongooseArray 内在调用了this._markModified()
+            // 详细解释见：http://cnodejs.org/topic/516ab9c96d38277306376cad
+            content.comments.splice(0,0);
+            return content.save();
+        }).then(function (newContent) {
+            responseData.message = '回复成功';
+            responseData.data = newContent;
+            res.json(responseData);
+        })
     })
 })
 
