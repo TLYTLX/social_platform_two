@@ -13,7 +13,7 @@
                 <el-select v-model="filters.money" placeholder="请选择" class="short">
                     <el-option
                         v-for="i in money"
-                        :label="i">
+                        :value="i">
                     </el-option>
                 </el-select>
             </el-form-item>

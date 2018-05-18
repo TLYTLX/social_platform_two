@@ -310,7 +310,7 @@ router.get('/content', function (req, res, next) {
     } else if (data.category === '合租') {
         if(sex)where.sex = new RegExp(sex,"gi");
         if(area)where.area = new RegExp(area,"gi");
-        if(money)where.title = new RegExp(money,"gi");
+        if(money)where.money = new RegExp(money,"gi");
         if(value)where.title = new RegExp(value,"gi");
     } else if (value) {
         where.title = new RegExp(value,"gi");
