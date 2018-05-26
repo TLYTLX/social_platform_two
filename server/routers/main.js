@@ -8,6 +8,8 @@ var router = express.Router();
 
 var http = require("http");
 
+var tc = require('text-censor');
+
 formidable = require('formidable'),
 fs = require('fs'),
 AVATAR_UPLOAD_FOLDER = '/avatar/';
@@ -427,19 +429,33 @@ router.get('/content/like', function (req, res, next) {
  * 帖子保存
  * */
 router.post('/content/add', function (req, res, next) {
+
+    //过滤敏感字眼
+    let content = req.body.content,
+        title = req.body.title,
+        alias = req.body.alias || '';
+    tc.filter(content,function(err, censored){
+        content = censored;
+    });
+    tc.filter(title,function(err, censored){
+        title = censored;
+    });
+    tc.filter(alias,function(err, censored){
+        alias = censored;
+    });
     // 保存帖子到数据库
     new Content({
         category: req.body.category,
-        title: req.body.title,
+        title: title,
         description: req.body.description || '',
-        content: req.body.content,
+        content: content,
         user: req.userInfo._id,
         addTime: new Date(),
         area: req.body.area || '',
         image: req.body.image || '',
         meetTime: req.body.meetTime,
         type: req.body.type || '',
-        alias: req.body.alias || '',
+        alias: alias,
         sex: req.body.sex || '',
         money: req.body.money || ''
     }).save().then(function () {
@@ -522,6 +538,10 @@ router.post('/content_comment/post', function (req, res, next) {
     Content.findOne({
         _id: contentId,
     }).then(function (content) {
+        let comment = req.body.content;
+        tc.filter(comment,function(err, censored){
+            comment = censored;
+        });
         if (content.category === '匿名论坛') {
             postData = {
                 // 评论信息
@@ -532,7 +552,7 @@ router.post('/content_comment/post', function (req, res, next) {
                     year:'匿名',
                 },
                 postTime: new Date(),
-                content: req.body.content,
+                content: comment,
                 reply: []
             };
             Content.findOne({
@@ -557,7 +577,7 @@ router.post('/content_comment/post', function (req, res, next) {
                         avatar:user.avatar
                     },
                     postTime: new Date(),
-                    content: req.body.content,
+                    content: comment,
                     reply: []
                 };
                 Content.findOne({
@@ -590,18 +610,22 @@ router.post('/reply_comment/post', function (req, res, next) {
     Content.findOne({
         _id: contentId,
     }).then(function (content) {
+        let comment = req.body.content;
+        tc.filter(comment,function(err, censored){
+            comment = censored;
+        });
         if (content.category === '匿名论坛') {
             replyComment = {
                 username: '匿名用户',
                 postTime: new Date(),
-                content: req.body.content,
+                content: comment,
                 replyUser: replyUser
             };
         } else {
             replyComment = {
                 username: req.userInfo.username,
                 postTime: new Date(),
-                content: req.body.content,
+                content: comment,
                 replyUser: replyUser
             };
         }
