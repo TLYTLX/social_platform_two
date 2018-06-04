@@ -205,8 +205,8 @@
                     this.post.addTime = this.formatDate(this.post.addTime);
                     this.post.comments.forEach((comment) => {
                         comment.postTime = this.formatDate(comment.postTime);
-                        comment.reply.forEach((rep) => {
-                            rep.postTime = this.formatDate(rep.postTime);
+                        comment.reply.forEach((reply) => {
+                            reply.postTime = this.formatDate(reply.postTime);
                         })
                     });
                 }, response => {

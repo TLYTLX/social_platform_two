@@ -401,7 +401,7 @@ router.post('/upload', function(req, res) {
 var likedata = {};
 router.get('/content/like', function (req, res, next) {
     likedata.category = req.query.category || '';
-    likedata.number = req.query.number || 5;
+    likedata.number = req.query.number || 10;
     var where = {};
     if (likedata.category) {
         where.category = likedata.category;

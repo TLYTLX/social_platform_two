@@ -1,7 +1,7 @@
 <template>
     <div>
 	    <div class="news">
-	    	<router-link :to="{path:'/post', query: {id: post._id}}" class="router-link">{{post.title}}</router-link>
+	    	<router-link :to="{path:'/post', query: {id: post._id}}" class="router-link"><span v-if="post.type">【{{post.type}}】</span>{{post.title}}</router-link>
 	    	<div style="display: flex">
    	    		<div class="news-content" style="-webkit-box-orient: vertical;">{{post.content}}</div>
    	    		<div class="news-like point" @click="addLike">

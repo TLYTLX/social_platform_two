@@ -70,8 +70,7 @@ router.post('/user/login', function (req, res, next) {
 
     //密码加密
     var content = 'slcks' + password + 'dref';
-    md5.update(content);
-    var sign = md5.digest('hex');
+    var sign = crypto.createHash('md5').update(content).digest('hex');
 
     User.findOne({
         username: username,

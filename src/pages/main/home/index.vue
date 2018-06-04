@@ -8,17 +8,13 @@
                 <div class="line-abs"></div>
                 <div class="line-abs"></div>
             </div>
-    		<ul class="ca-menu">
-		        <li v-for="i in profess">
-                    <a href="#">
-                    	<i class="el-icon-star-on ca-icon" id="heart"></i>
-                        <div class="ca-content">
-                            <div class="ca-main">{{i.title}}</div>
-                            <div class="ca-sub">{{i.time}}</div>
-                        </div>
-                    </a>
-                </li>
-            </ul>
+            <div class="profess-image" v-for="i in profess" :style="'background:url('+getRandom(i.background)+') center center;background-size:cover;'">
+                <div class="profess-title">
+                    <div>{{i.title}}</div>
+                    <p>{{i.content}}</p>
+                </div>
+                <div class="profess-time">{{i.addTime}}</div>
+            </div>
     	</div>
     	<div id="news" class="block1">
     		<div class="block-title" style="color:#000">发现新鲜事</div>
@@ -28,19 +24,17 @@
                 <i class="el-icon-warning news-title"></i>
                 <div class="line-abs"></div>
             </div>
-    		<div style="width:60%;margin:0 auto">
-        		<div class="news-block" v-for="i in news">
-        			<div style="display:inline-block;width:90%">
-        			    <div class="news-title">{{i.title}}</div>
-        			    <div class="news-content" style="-webkit-box-orient: vertical;">{{i.content}}</div>
-        		    </div>
-                    <div style="display:inline-block;text-align:center">
-                        <img src="../../../static/like.png" style="width: 40px;display:block">
-                        {{i.like}}
-                    </div>
-        			<div class="news-time">{{i.time}}</div>
-        		</div>
-    	    </div>
+    		<div class="news-block" v-for="i in news">
+    			<div style="display:inline-block;width:88%">
+    			    <div class="news-title">{{i.title}}</div>
+    			    <div class="news-content" style="-webkit-box-orient: vertical;">{{i.content}}</div>
+    		    </div>
+                <div style="display:inline-block;text-align:center">
+                    <img src="../../../static/like.png" style="width: 40px;display:block">
+                    {{i.like}}
+                </div>
+    			<div class="news-time">{{i.addTime}}</div>
+    		</div>
     	</div>
         <div class="para">
             <ul>
@@ -67,47 +61,8 @@
 export default {
   data() {
     return {
-        profess:[
-            {
-                title:'窗外的暴雨淋不湿屋内的你，我是暴雨，你还是你。',
-                time:'2018-03-14'
-            },{
-                title:'窗外的暴雨淋不湿屋内的你，我是暴雨，你还是你。',
-                time:'2018-03-14'
-            },{
-                title:'窗外的暴雨淋不湿屋内的你，我是暴雨，你还是你。',
-                time:'2018-03-14'
-            },{
-                title:'窗外的暴雨淋不湿屋内的你，我是暴雨，你还是你。',
-                time:'2018-03-14'
-            },{
-                title:'窗外的暴雨淋不湿屋内的你，我是暴雨，你还是你。',
-                time:'2018-03-14'
-            },
-        ],
-        news:[
-            {
-                title:'就点击发送发送的技术的附近发生大幅度升级',
-                time:'2018-03-23',
-                like:324,
-                content:'手动阀手动阀手动阀手动阀升级更快更高就反    倒是实施打击非法收集数据接口了决定是否健康绿色的士大夫急口令东方斯卡拉看来犯得上士大夫艰苦副书记考虑'
-            },{
-                title:'就点击发送发送的技术的附近发生大幅度升级',
-                time:'2018-03-23',
-                like:324,
-                content:'手动阀手动阀手动阀手动阀升级更快更高就反    倒是实施打击非法收集数据接口了决定是否健康绿色的士大夫急口令东方斯卡拉看来犯得上士大夫艰苦副书记考虑'
-            },{
-                title:'就点击发送发送的技术的附近发生大幅度升级',
-                time:'2018-03-23',
-                like:324,
-                content:'手动阀手动阀手动阀手动阀升级更快更高就反    倒是实施打击非法收集数据接口了决定是否健康绿色的士大夫急口令东方斯卡拉看来犯得上士大夫艰苦副书记考虑'
-            },{
-                title:'就点击发送发送的技术的附近发生大幅度升级',
-                time:'2018-03-23',
-                like:324,
-                content:'手动阀手动阀手动阀手动阀升级更快更高就反    倒是实施打击非法收集数据接口了决定是否健康绿色的士大夫急口令东方斯卡拉看来犯得上士大夫艰苦副书记考虑'
-            },
-        ],
+        profess:[],
+        news:[],
         nav:[
             {
                 title:'匿名论坛',
@@ -128,6 +83,30 @@ export default {
             },
         ]
     }
+  },
+  methods:{
+    getRandom(background){
+        return require('../../../static/background/'+ background +'.jpg');
+    },
+    getLikeList (category,list) {
+        this.$http.get('http://localhost:8081/content/like?category=' + category).then(response => {
+            response.data.contents.forEach((content) => {
+                content.addTime = this.formatDate(content.addTime);
+                content.background = Math.floor(Math.random()*33+1);
+            });
+            this[list] = response.data.contents;
+        }, response => {
+            console.log('error:' + response);
+        })
+    },
+  },
+  created(){
+    this.getLikeList('表白墙','profess');
+    this.getLikeList('新鲜事','news');
+  },
+  mounted(){
+    console.log(this.profess);
+    console.log(this.news)
   }
 }
 </script>
@@ -149,6 +128,36 @@ export default {
     height: 1px;
     width: 100px;
 }
+.profess-image{
+    margin:10px;
+    width: 180px;
+    height: 180px;
+    display: inline-block;
+    vertical-align: top;
+    position: relative;
+    cursor: pointer;
+    overflow: hidden;
+}
+.profess-image:nth-child(6n){
+    width: 360px;
+}
+.profess-title{
+    color: #fff;
+    font-size: 20px;
+    height: 131px;
+    padding: 30px 10px;
+    -webkit-box-orient: vertical;
+    display: -webkit-box;
+    -webkit-line-clamp: 5;
+    overflow: hidden;
+}
+.profess-time{
+    color: #fff;
+    text-align: right;
+    padding-right:10px;
+    padding-top: 25px;
+}
+
 .para img{max-width: 100%; vertical-align: middle;}
 .full-length{width: 100%; float: left; padding-bottom: 80px;}
 .para ul{margin: 0 -1.5%;}
@@ -173,174 +182,7 @@ export default {
 
 .port-2.effect-3 .text-desc{opacity: 1; top: auto; bottom: -100%;}
 .port-2.effect-3:hover .text-desc{bottom: 0;}
-.ca-menu{
-    padding:0;
-    margin:20px auto;
-    width: 1100px;
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    list-style: none;
-    align-items: center;
-}
-.ca-menu li{
-    width: 200px;
-    height: 240px;
-    position: relative;
-    margin: 5px;
-    background: #fdf1ed;
-    -webkit-box-shadow: 1px 1px 2px rgba(0,0,0,0.2);
-    -moz-box-shadow: 1px 1px 2px rgba(0,0,0,0.2);
-    box-shadow: 1px 1px 2px rgba(0,0,0,0.2);
-    margin-right: 4px;
-    -webkit-transition: all 300ms linear;
-    -moz-transition: all 300ms linear;
-    -o-transition: all 300ms linear;
-    -ms-transition: all 300ms linear;
-    transition: all 300ms linear;
-}
-.ca-menu li a{
-    text-align: left;
-    width: 100%;
-    height: 100%;
-    display: block;
-    color: #333;
-    position: relative;
-}
-.ca-icon{
-    font-size: 60px;
-    color: #333;
-    text-shadow: 0px 0px 1px #333;
-    line-height: 150px;
-    position: absolute;
-    width: 100%;
-    height: 50%;
-    left: 0px;
-    top: 0px;
-    text-align: center;
-    -webkit-transition: all 400ms linear;
-    -moz-transition: all 400ms linear;
-    -o-transition: all 400ms linear;
-    -ms-transition: all 400ms linear;
-    transition: all 400ms linear;
-}
-.ca-icon#heart{
-    color: #fda9a9;
-    text-shadow: 0px 0px 1px #f7002f;
-}
-.ca-content{
-    position: absolute;
-    left: 20px;
-    right: 20px;
-    bottom: 20px;
-    top: 20px;
-}
-.ca-main{
-    font-size: 20px;
-    opacity: 0.8;
-    text-align: center;
-    -webkit-transition: all 200ms linear;
-    -moz-transition: all 200ms linear;
-    -o-transition: all 200ms linear;
-    -ms-transition: all 200ms linear;
-    transition: all 200ms linear;
-}
-.ca-sub{
-    text-align:right;
-    font-size: 14px;
-    color: #666;
-    position: absolute;
-    bottom: 0px;
-    line-height: 40px;
-    width: 100%;
-    left: 0px;
-    opacity: 0.8;
-    -webkit-transition: all 200ms linear;
-    -moz-transition: all 200ms linear;
-    -o-transition: all 200ms linear;
-    -ms-transition: all 200ms linear;
-    transition: all 200ms linear;
-}
-.ca-menu li:hover{
-    background-color: #fff;
-    z-index:999;
-    -webkit-transform: scale(1.1);
-    -moz-transform: scale(1.1);
-    -ms-transform: scale(1.1);
-    -o-transform: scale(1.1);
-    transform: scale(1.1);
-}
-.ca-menu li:hover .ca-icon{
-    color: #606266;
-    font-size: 90px;
-    opacity:0.3;
-}
-.ca-menu li:hover .ca-icon#heart{
-    -webkit-animation: smallToBig 900ms alternate infinite ease;
-    -moz-animation: smallToBig 900ms alternate infinite ease;
-    -ms-animation: smallToBig 900ms alternate infinite ease;
-}
-.ca-menu li:hover .ca-main{
-    color: #606266;
-    -webkit-animation: smallToBig 300ms ease;
-    -moz-animation: smallToBig 300ms ease;
-    -ms-animation: smallToBig 300ms ease;
-}
-.ca-menu li:hover .ca-sub{
-    color: #606266;
-    -webkit-animation: moveFromBottom 500ms ease;
-    -moz-animation: moveFromBottom 500ms ease;
-    -ms-animation: moveFromBottom 500ms ease;
-}
-@-webkit-keyframes smallToBig{
-    from {
-        -webkit-transform: scale(0.1);
-    }
-    to {
-        -webkit-transform: scale(1);
-    }
-}
-@-moz-keyframes smallToBig{
-    from {
-        -moz-transform: scale(0.1);
-    }
-    to {
-        -moz-transform: scale(1);
-    }
-}
-@-ms-keyframes smallToBig{
-    from {
-        -ms-transform: scale(0.1);
-    }
-    to {
-        -ms-transform: scale(1);
-    }
-}
 
-@-webkit-keyframes moveFromBottom {
-    from {
-        -webkit-transform: translateY(100%);
-    }
-    to {
-        -webkit-transform: translateY(0%);
-    }
-}
-@-moz-keyframes moveFromBottom {
-    from {
-        -moz-transform: translateY(100%);
-    }
-    to {
-        -moz-transform: translateY(0%);
-    }
-}
-@-ms-keyframes moveFromBottom {
-    from {
-        -ms-transform: translateY(100%);
-    }
-    to {
-        -ms-transform: translateY(0%);
-    }
-}
 body{
 	background: #f1f1f1;
 	margin:0;
@@ -360,7 +202,7 @@ body{
 	opacity: 0.8;
 	margin: 10px auto;
 	padding: 5px;
-	width: 86%;
+	width: 100%;
 	color: #a4a4a4;
 	text-align: left;
 	box-shadow: 2px 2px 5px #d1d1d1;
@@ -390,6 +232,15 @@ body{
 }
 #profess{
 	background: #f1f1f1;
+    width:65%;
+    display: inline-block;
+    vertical-align: top;
+}
+#news{
+    background: #f1f1f1;
+    width: 34%;
+    display: inline-block;
+    vertical-align: top;
 }
 #banner{
     width: 100%;
@@ -401,8 +252,5 @@ body{
 #banner img{
     width: 100px;
     margin-top:50px;
-}
-#news{
-	background: #f1f1f1;
 }
 </style>
